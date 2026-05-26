@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Forge — SRM IST Trichy | Data Science Club</title>
+  <meta name="description" content="Data Forge — the Data Science Club of SRM IST Trichy. Forging the future through data." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Custom cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-trail" id="cursorTrail"></div>
+
+  <!-- Matrix rain canvas (full BG) -->
+  <canvas id="matrixCanvas"></canvas>
+
+  <!-- ── NAV ─────────────────────────────────── -->
+  <nav id="navbar">
+    <div class="nav-wrap">
+      <a href="#hero" class="nav-brand">
+        <img src="logo.png" alt="Data Forge" class="nav-brand-logo" />
+        <span>DATA<strong>FORGE</strong></span>
+      </a>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="#about">About</a></li>
+        <li><a href="#vision">Vision</a></li>
+        <li><a href="#domains">Domains</a></li>
+        <li><a href="#activities">Activities</a></li>
+        <li><a href="#join" class="nav-btn">Join Us</a></li>
+      </ul>
+      <button class="nav-hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ── HERO ────────────────────────────────── -->
+  <section id="hero">
+    <!-- Corner badges -->
+    <div class="corner-badge corner-tl" id="badge-srm">
+      <div class="badge-inner">
+        <img src="srm-logo.png" alt="SRM Student Club" />
+      </div>
+    </div>
+    <div class="corner-badge corner-tr" id="badge-iic">
+      <div class="badge-inner">
+        <img src="iic-logo.png" alt="IIC" />
+      </div>
+    </div>
+
+    <!-- Hex mesh background -->
+    <div class="hex-mesh" aria-hidden="true">
+      <svg class="hex-svg" viewBox="0 0 1400 800" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <pattern id="hexPattern" x="0" y="0" width="80" height="92.4" patternUnits="userSpaceOnUse">
+            <polygon points="40,0 80,23.1 80,69.3 40,92.4 0,69.3 0,23.1"
+              fill="none" stroke="rgba(57,255,20,0.07)" stroke-width="1"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#hexPattern)"/>
+      </svg>
+    </div>
+
+    <!-- Orbiting rings -->
+    <div class="orbit-wrap" aria-hidden="true">
+      <div class="orbit orbit-1"></div>
+      <div class="orbit orbit-2"></div>
+      <div class="orbit orbit-3"></div>
+      <div class="orbit-dot od-1"></div>
+      <div class="orbit-dot od-2"></div>
+      <div class="orbit-dot od-3"></div>
+    </div>
+
+    <div class="hero-center">
+      <p class="hero-pre" id="heroPre">SRM Institute of Science &amp; Technology, Tiruchirapalli</p>
+
+      <div class="hero-logo-wrap" id="heroLogo">
+        <img src="logo.png" alt="Data Forge" />
+      </div>
+
+      <h1 class="hero-h1" id="heroH1">
+        <span class="h1-outline" data-text="DATA">DATA</span>
+        <span class="h1-solid" data-text="FORGE">FORGE</span>
+      </h1>
+
+      <div class="hero-terminal" id="heroTerminal">
+        <span class="terminal-prompt">$&gt;</span>
+        <span class="terminal-text" id="terminalText"></span>
+        <span class="terminal-cursor">█</span>
+      </div>
+
+      <div class="hero-ctas">
+        <a href="#about" class="cta-primary" id="ctaPrimary">
+          <span class="cta-bg"></span>
+          <span class="cta-label">Explore the Club</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#join" class="cta-ghost" id="ctaGhost">Join Data Forge</a>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="hero-scroll">
+      <div class="scroll-track"><div class="scroll-thumb"></div></div>
+      <span>Scroll</span>
+    </div>
+
+    <!-- Floating data chips -->
+    <div class="data-chip chip-1" aria-hidden="true">ML · ANALYTICS</div>
+    <div class="data-chip chip-2" aria-hidden="true">BIG DATA</div>
+    <div class="data-chip chip-3" aria-hidden="true">DATA SCIENCE</div>
+    <div class="data-chip chip-4" aria-hidden="true">PYTHON · SQL</div>
+  </section>
+
+  <!-- ── MARQUEE STRIP ───────────────────────── -->
+  <div class="marquee-strip" aria-hidden="true">
+    <div class="marquee-track">
+      <span>DATA SCIENCE</span><span class="dot">◆</span>
+      <span>BIG DATA ANALYTICS</span><span class="dot">◆</span>
+      <span>BUSINESS INTELLIGENCE</span><span class="dot">◆</span>
+      <span>MACHINE LEARNING</span><span class="dot">◆</span>
+      <span>PREDICTIVE ANALYTICS</span><span class="dot">◆</span>
+      <span>DATA VISUALIZATION</span><span class="dot">◆</span>
+      <span>DEEP LEARNING</span><span class="dot">◆</span>
+      <span>DATA ENGINEERING</span><span class="dot">◆</span>
+      <!-- duplicate for seamless loop -->
+      <span>DATA SCIENCE</span><span class="dot">◆</span>
+      <span>BIG DATA ANALYTICS</span><span class="dot">◆</span>
+      <span>BUSINESS INTELLIGENCE</span><span class="dot">◆</span>
+      <span>MACHINE LEARNING</span><span class="dot">◆</span>
+      <span>PREDICTIVE ANALYTICS</span><span class="dot">◆</span>
+      <span>DATA VISUALIZATION</span><span class="dot">◆</span>
+      <span>DEEP LEARNING</span><span class="dot">◆</span>
+      <span>DATA ENGINEERING</span><span class="dot">◆</span>
+    </div>
+  </div>
+
+  <!-- ── ABOUT ───────────────────────────────── -->
+  <section id="about" class="section">
+    <div class="about-layout">
+      <!-- Left: big statement -->
+      <div class="about-left reveal-left">
+        <div class="section-tag">// about us</div>
+        <h2 class="section-h2">We are<br/><span class="accent-stroke">Data</span><br/><span class="accent-fill">Forge.</span></h2>
+        <p class="about-body">
+          The official Data Science club of SRM IST, Tiruchirapalli.
+          A student-led collective obsessed with turning raw data into
+          powerful insight — across every branch, every year, every background.
+        </p>
+        <div class="about-pills">
+          <span class="pill">SRM Trichy</span>
+          <span class="pill">All Branches</span>
+          <span class="pill">Data Science</span>
+          <span class="pill">Analytics</span>
+        </div>
+      </div>
+
+      <!-- Right: terminal card -->
+      <div class="about-right reveal-right">
+        <div class="code-card">
+          <div class="code-card-bar">
+            <span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span>
+            <span class="code-file">dataforge.py</span>
+          </div>
+          <div class="code-body">
+            <div class="code-line"><span class="kw">import</span> <span class="mod">DataForge</span></div>
+            <div class="code-line"> </div>
+            <div class="code-line"><span class="kw">club</span> = DataForge(</div>
+            <div class="code-line">&nbsp;&nbsp;<span class="str">"SRM IST Trichy"</span>,</div>
+            <div class="code-line">&nbsp;&nbsp;focus=[</div>
+            <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"Data Science"</span>,</div>
+            <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"Big Data"</span>,</div>
+            <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"Analytics"</span>,</div>
+            <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"Business Intel"</span></div>
+            <div class="code-line">&nbsp;&nbsp;]</div>
+            <div class="code-line">)</div>
+            <div class="code-line"> </div>
+            <div class="code-line"><span class="fn">club.forge</span>(<span class="str">"future"</span>) <span class="cm"># ✓</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── VISION ─────────────────────────────── -->
+  <section id="vision" class="section">
+    <div class="vision-layout">
+      <div class="vision-top reveal-up">
+        <div class="section-tag">// vision &amp; objectives</div>
+        <h2 class="section-h2 center-h2">Built to <span class="accent-fill">Empower</span></h2>
+      </div>
+
+      <div class="vision-quote reveal-up">
+        <div class="quote-line"></div>
+        <blockquote>
+          "To foster data-driven thinking, analytical innovation, and
+          industry-ready skills — preparing B.Tech students to thrive
+          in an increasingly data-powered world."
+        </blockquote>
+        <div class="quote-line"></div>
+      </div>
+
+      <div class="obj-bento" id="objBento">
+        <div class="bento-card bento-wide reveal-bento" id="bento-1">
+          <div class="bento-num">01</div>
+          <div class="bento-icon">📐</div>
+          <h3>Core Foundations</h3>
+          <p>Data Science &amp; Statistics fundamentals with hands-on practice.</p>
+        </div>
+        <div class="bento-card reveal-bento" id="bento-2">
+          <div class="bento-num">02</div>
+          <div class="bento-icon">📊</div>
+          <h3>Data Analytics</h3>
+          <p>Visualization &amp; analytics tool mastery.</p>
+        </div>
+        <div class="bento-card reveal-bento" id="bento-3">
+          <div class="bento-num">03</div>
+          <div class="bento-icon">💼</div>
+          <h3>Business Thinking</h3>
+          <p>Real-world decision making with data.</p>
+        </div>
+        <div class="bento-card reveal-bento" id="bento-4">
+          <div class="bento-num">04</div>
+          <div class="bento-icon">🌐</div>
+          <h3>Big Data Tech</h3>
+          <p>Industry frameworks &amp; large-scale systems.</p>
+        </div>
+        <div class="bento-card bento-tall reveal-bento" id="bento-5">
+          <div class="bento-num">05</div>
+          <div class="bento-icon">🔬</div>
+          <h3>Research</h3>
+          <p>Publications in data-related fields &amp; journals.</p>
+        </div>
+        <div class="bento-card reveal-bento" id="bento-6">
+          <div class="bento-num">06</div>
+          <div class="bento-icon">🤝</div>
+          <h3>Industry Connect</h3>
+          <p>Professionals, analytics firms &amp; startups.</p>
+        </div>
+        <div class="bento-card reveal-bento" id="bento-7">
+          <div class="bento-num">07</div>
+          <div class="bento-icon">🏆</div>
+          <h3>Events &amp; Datathons</h3>
+          <p>Workshops, bootcamps &amp; competitions.</p>
+        </div>
+        <div class="bento-card bento-wide reveal-bento" id="bento-8">
+          <div class="bento-num">08</div>
+          <div class="bento-icon">🌍</div>
+          <h3>Real-World Impact</h3>
+          <p>Data solutions for business and societal problems at scale.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── DOMAINS ────────────────────────────── -->
+  <section id="domains" class="section">
+    <div class="container">
+      <div class="section-tag reveal-up">// who can join?</div>
+      <h2 class="section-h2 reveal-up">Data Science <span class="accent-fill">Applies</span><br/>Everywhere</h2>
+      <p class="section-sub reveal-up">Every branch. Every year. Here's how your field connects.</p>
+
+      <div class="domains-scroll-wrap" id="domainsScroll">
+        <div class="domain-track" id="domainTrack">
+          <div class="dcard" id="dcard-cs">
+            <div class="dcard-num">01</div>
+            <div class="dcard-icon">💻</div>
+            <h3>Computer Science</h3>
+            <p>ML pipelines, data engineering, AI systems</p>
+            <div class="dcard-tags"><span>Python</span><span>TensorFlow</span><span>Spark</span></div>
+          </div>
+          <div class="dcard" id="dcard-ec">
+            <div class="dcard-num">02</div>
+            <div class="dcard-icon">📡</div>
+            <h3>Electronics</h3>
+            <p>Sensor data, signal processing, IoT analytics</p>
+            <div class="dcard-tags"><span>MATLAB</span><span>NumPy</span><span>IoT</span></div>
+          </div>
+          <div class="dcard" id="dcard-mech">
+            <div class="dcard-num">03</div>
+            <div class="dcard-icon">⚙️</div>
+            <h3>Mechanical</h3>
+            <p>Predictive maintenance, manufacturing analytics</p>
+            <div class="dcard-tags"><span>Pandas</span><span>Tableau</span></div>
+          </div>
+          <div class="dcard" id="dcard-civil">
+            <div class="dcard-num">04</div>
+            <div class="dcard-icon">🏗️</div>
+            <h3>Civil Engineering</h3>
+            <p>Infrastructure data, smart city analytics</p>
+            <div class="dcard-tags"><span>GIS</span><span>Power BI</span></div>
+          </div>
+          <div class="dcard" id="dcard-biz">
+            <div class="dcard-num">05</div>
+            <div class="dcard-icon">📈</div>
+            <h3>Business</h3>
+            <p>Market analytics, consumer behaviour</p>
+            <div class="dcard-tags"><span>Excel</span><span>SQL</span><span>Power BI</span></div>
+          </div>
+          <div class="dcard" id="dcard-health">
+            <div class="dcard-num">06</div>
+            <div class="dcard-icon">🏥</div>
+            <h3>Healthcare Tech</h3>
+            <p>Patient analytics, clinical decision support</p>
+            <div class="dcard-tags"><span>R</span><span>SPSS</span><span>Python</span></div>
+          </div>
+          <div class="dcard" id="dcard-fin">
+            <div class="dcard-num">07</div>
+            <div class="dcard-icon">💹</div>
+            <h3>Finance</h3>
+            <p>Risk analytics, algorithmic trading data</p>
+            <div class="dcard-tags"><span>R</span><span>Python</span><span>Excel</span></div>
+          </div>
+        </div>
+      </div>
+      <p class="scroll-hint-text reveal-up">← Drag to explore →</p>
+    </div>
+  </section>
+
+  <!-- ── ACTIVITIES ─────────────────────────── -->
+  <section id="activities" class="section">
+    <div class="container">
+      <div class="section-tag reveal-up">// what we do</div>
+      <h2 class="section-h2 reveal-up">Learning <span class="accent-fill">Activities</span></h2>
+
+      <div class="act-grid" id="actGrid">
+        <div class="act-card ac-featured reveal-bento" id="act-1">
+          <div class="act-num">01</div>
+          <div class="act-icon-wrap">📅</div>
+          <h3>Dataset of the Month</h3>
+          <p>Members pick a public dataset and present compelling findings every month — turning raw numbers into powerful stories.</p>
+          <span class="act-freq">Monthly</span>
+        </div>
+        <div class="act-card reveal-bento" id="act-2">
+          <div class="act-num">02</div>
+          <div class="act-icon-wrap">📖</div>
+          <h3>Research Paper Circle</h3>
+          <p>Decode cutting-edge papers in data science and ML together.</p>
+          <span class="act-freq">Weekly</span>
+        </div>
+        <div class="act-card reveal-bento" id="act-3">
+          <div class="act-num">03</div>
+          <div class="act-icon-wrap">💼</div>
+          <h3>Business Case Analysis</h3>
+          <p>Real-world cases solved with data — like mini consulting sessions.</p>
+          <span class="act-freq">Bi-Weekly</span>
+        </div>
+        <div class="act-card reveal-bento" id="act-4">
+          <div class="act-num">04</div>
+          <div class="act-icon-wrap">🧩</div>
+          <h3>Analytics Challenges</h3>
+          <p>Gamified puzzles sharpening analytical speed and precision.</p>
+          <span class="act-freq">Weekly</span>
+        </div>
+        <div class="act-card ac-full reveal-bento" id="act-5">
+          <div class="act-num">05</div>
+          <div class="act-icon-wrap">🛠️</div>
+          <h3>Workshops &amp; Bootcamps</h3>
+          <p>Intensive hands-on sessions — Python, SQL, Power BI, Tableau and beyond. Industry-grade skills delivered on campus.</p>
+          <span class="act-freq">Seasonal</span>
+        </div>
+        <div class="act-card ac-full reveal-bento" id="act-6">
+          <div class="act-num">06</div>
+          <div class="act-icon-wrap">⚡</div>
+          <h3>Datathons &amp; Competitions</h3>
+          <p>Hackathon-style competitions. Real problems. Time pressure. Real impact. Build solutions that matter under the clock.</p>
+          <span class="act-freq">Semester</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── JOIN ───────────────────────────────── -->
+  <section id="join" class="section">
+    <div class="join-wrap">
+      <!-- Radial burst -->
+      <div class="join-burst" aria-hidden="true"></div>
+
+      <div class="join-content reveal-up">
+        <div class="section-tag center-tag">// ready to begin?</div>
+        <h2 class="join-h2">
+          Join <span class="accent-fill">Data Forge</span>
+        </h2>
+        <p class="join-sub">Every great data story starts with a single question.<br/>Ask yours inside Data Forge.</p>
+
+        <div class="join-facts">
+          <div class="jf-item">
+            <span class="jf-icon">🏫</span>
+            <span>SRM IST, Tiruchirapalli</span>
+          </div>
+          <div class="jf-sep"></div>
+          <div class="jf-item">
+            <span class="jf-icon">📚</span>
+            <span>All B.Tech Branches</span>
+          </div>
+          <div class="jf-sep"></div>
+          <div class="jf-item">
+            <span class="jf-icon">⚡</span>
+            <span>All Skill Levels</span>
+          </div>
+        </div>
+
+        <a href="https://chat.whatsapp.com/CGwok6lCSwt1DEIfCUHXso" target="_blank" rel="noopener noreferrer" class="cta-primary cta-large" id="joinCta">
+          <span class="cta-bg"></span>
+          <span class="cta-label">Join WhatsApp Group</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <p class="join-note">Tap to join our WhatsApp community — open to all branches!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ─────────────────────────────── -->
+  <footer id="footer">
+    <div class="footer-wrap">
+      <div class="footer-brand">
+        <img src="logo.png" alt="Data Forge" class="footer-logo" />
+        <div>
+          <div class="footer-name">DATA FORGE</div>
+          <div class="footer-sub">Data Science Club · SRM IST Trichy</div>
+        </div>
+      </div>
+      <div class="footer-partners">
+        <img src="srm-logo.png" alt="SRM Student Club" class="partner-img" />
+        <img src="iic-logo.png" alt="IIC" class="partner-img" />
+      </div>
+      <nav class="footer-nav">
+        <a href="#about">About</a>
+        <a href="#vision">Vision</a>
+        <a href="#domains">Domains</a>
+        <a href="#activities">Activities</a>
+        <a href="#join">Join</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Data Forge — SRM IST, Tiruchirapalli</p>
+      <p class="footer-motto">Forging the Future Through Data ⚡</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
