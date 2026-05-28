@@ -216,6 +216,7 @@ body:has(a:hover) .cursor-trail { width: 48px; height: 48px; border-color: rgba(
   position: relative;
   overflow: hidden;
   z-index: 2;
+  padding-bottom: 110px;
 }
 
 /* Hex mesh */
@@ -430,7 +431,7 @@ body:has(a:hover) .cursor-trail { width: 48px; height: 48px; border-color: rgba(
   gap: 16px;
   justify-content: center;
   flex-wrap: wrap;
-  margin-bottom: 80px;
+  margin-bottom: 40px;
 }
 
 /* CTA button primary */
@@ -487,7 +488,7 @@ body:has(a:hover) .cursor-trail { width: 48px; height: 48px; border-color: rgba(
 /* Scroll indicator */
 .hero-scroll {
   position: absolute;
-  bottom: 28px;
+  bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -502,6 +503,9 @@ body:has(a:hover) .cursor-trail { width: 48px; height: 48px; border-color: rgba(
   pointer-events: none;
   z-index: 4;
   animation: scrollFade 2.5s ease-in-out infinite;
+}
+@media (max-height: 740px), (max-width: 768px) {
+  .hero-scroll { display: none !important; }
 }
 @keyframes scrollFade {
   0%,100% { opacity: .35; transform: translateX(-50%) translateY(0); }
@@ -1116,6 +1120,7 @@ body:has(a:hover) .cursor-trail { width: 48px; height: 48px; border-color: rgba(
   align-items: center;
   justify-content: center;
   pointer-events: all;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
 }
 #gate-loader .gate-half {
   position: absolute;

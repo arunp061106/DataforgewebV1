@@ -9,33 +9,21 @@
   const gate = document.getElementById('gate-loader');
   if (!gate) return;
 
-  const gateLeft = gate.querySelector('.gate-left');
-
-  // After loader bar fills (~2.2s), open the gates
+  // After loader bar finishes filling (2.0s), trigger gates split opening animation
   setTimeout(() => {
     gate.classList.add('gate-open');
-  }, 2200);
+  }, 2000);
 
-  // Listen for the gate-left slide transition to finish, then clean up
-  gateLeft.addEventListener('transitionend', function handler(e) {
-    if (e.propertyName !== 'transform') return;
-    gateLeft.removeEventListener('transitionend', handler);
-
-    // Hide gate visually, then remove from DOM on next frame
-    gate.classList.add('gate-hidden');
-    requestAnimationFrame(() => {
-      gate.remove();
-      document.body.classList.remove('gate-active');
-    });
-  });
-
-  // Fallback: if transitionend never fires (e.g. reduced-motion), clean up after 5s
+  // Smoothly fade out the entire gate container after transitions finish (3.2s)
   setTimeout(() => {
-    if (document.getElementById('gate-loader')) {
-      gate.remove();
-      document.body.classList.remove('gate-active');
-    }
-  }, 5000);
+    gate.classList.add('gate-hidden');
+  }, 3200);
+
+  // Completely remove gate element and unlock scrolling (3.6s)
+  setTimeout(() => {
+    gate.remove();
+    document.body.classList.remove('gate-active');
+  }, 3600);
 })();
 
 // ── Custom cursor ────────────────────────────
