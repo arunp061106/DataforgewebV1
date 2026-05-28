@@ -10,7 +10,22 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
+<body class="gate-active">
+
+  <!-- ── GATE LOADER — Sci-Fi Entry ─────────── -->
+  <div id="gate-loader">
+    <div class="gate-half gate-left"></div>
+    <div class="gate-half gate-right"></div>
+    <div class="gate-content">
+      <div class="gate-logo-wrap">
+        <img src="logo.png" alt="Data Forge Logo" class="gate-logo" />
+        <div class="gate-scanner"></div>
+      </div>
+      <div class="gate-title">DATA<strong>FORGE</strong></div>
+      <div class="gate-loader-bar"><div class="gate-loader-fill"></div></div>
+      <div class="gate-status">INITIALIZING SECURE DATA PIPELINE...</div>
+    </div>
+  </div>
 
   <!-- Custom cursor -->
   <div class="cursor" id="cursor"></div>

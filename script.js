@@ -1,7 +1,25 @@
 /* ═══════════════════════════════════════════════
    DATA FORGE — Immersive JavaScript
    Matrix rain · Cursor · Terminal typing · Reveal
+   Gate Loader · Scroll Animations
    ═══════════════════════════════════════════════ */
+
+// ── Gate Loader — Sci-Fi Entry ───────────────
+(function() {
+  const gate = document.getElementById('gate-loader');
+  if (!gate) return;
+
+  // After loader bar finishes (~2.2s), trigger gate open
+  setTimeout(() => {
+    gate.classList.add('gate-open');
+  }, 2200);
+
+  // After gate fully opens (~3.5s total), remove it and unlock scroll
+  setTimeout(() => {
+    gate.remove();
+    document.body.classList.remove('gate-active');
+  }, 3500);
+})();
 
 // ── Custom cursor ────────────────────────────
 const cursor      = document.getElementById('cursor');
