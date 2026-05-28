@@ -17,7 +17,7 @@ html { scroll-behavior: smooth; font-size: 16px; }
   --bg: #040804;
   --bg1: #080f08;
   --bg2: #0c160c;
-  --card: rgba(14, 25, 14, 0.4);
+  --card: rgba(14, 25, 14, 0.75);
   --border: rgba(57,255,20,.14);
   --border-hi: rgba(57,255,20,.4);
   --white: #f0fff0;
@@ -621,8 +621,8 @@ body:has(a:hover) .cursor-trail { width: 48px; height: 48px; border-color: rgba(
   overflow: hidden;
   box-shadow: 0 32px 80px rgba(0,0,0,.6), 0 0 0 1px var(--border);
   transition: transform .4s var(--spring), box-shadow .4s;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 .code-card:hover {
   transform: translateY(-8px) rotateX(2deg);
@@ -716,8 +716,8 @@ body:has(a:hover) .cursor-trail { width: 48px; height: 48px; border-color: rgba(
   overflow: hidden;
   transition: border-color .3s, transform .3s var(--spring), box-shadow .3s;
   cursor: default;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 .bento-card::after {
   content: '';
@@ -791,8 +791,8 @@ body:has(a:hover) .cursor-trail { width: 48px; height: 48px; border-color: rgba(
   position: relative;
   overflow: hidden;
   transition: border-color .3s, transform .3s var(--spring), box-shadow .3s;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 .dcard::before {
   content: '';
@@ -869,8 +869,8 @@ body:has(a:hover) .cursor-trail { width: 48px; height: 48px; border-color: rgba(
   display: flex;
   flex-direction: column;
   gap: 10px;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 .act-card::before {
   content: '';
