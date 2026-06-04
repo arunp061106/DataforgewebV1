@@ -4,87 +4,121 @@
    ═══════════════════════════════════════════════ */
 
 // ─── Knowledge Base ─────────────────────────────
+// patterns = flat keyword/keyphrase list — matched by SCORING engine below
 const KB = {
   greetings: {
-    patterns: ['hello', 'hi', 'hey', 'sup', 'yo', 'greetings', 'hola', 'howdy'],
+    patterns: ['hello','hi','hey','sup','yo','greetings','hola','howdy','good morning','good evening','good afternoon','what up','wassup','namaste'],
     responses: [
       "Hey there, Data Explorer! 👋 I'm F.O.R.G.E — your personal Data Science guide! Ready to forge some knowledge? ⚡",
       "Welcome, future data scientist! 🔥 The forge is hot and I'm ready to help. What would you like to learn today?",
-      "Hello, human! 🤖 I'm F.O.R.G.E, the official mascot of Data Forge at SRM IST Trichy. Ask me anything!",
+      "Hello! 🤖 I'm F.O.R.G.E, the official mascot of Data Forge at SRM IST Trichy. Ask me anything!",
     ]
   },
   about: {
-    patterns: ['what is data forge', 'about data forge', 'tell me about', 'who are you', 'what is this club', 'about the club'],
+    patterns: [
+      'data forge','dataforge','forge club','who are you','tell me about','what is this','explain the club',
+      'srm','trichy','srmist','student club','data science club','founded','purpose','mission','collective','organisation','organization'
+    ],
     responses: [
       "🔥 **Data Forge** is the official Data Science Club of SRM IST, Tiruchirapalli! We're a student-led collective obsessed with turning raw data into powerful insight — across every branch, every year, every background.\n\n📌 We cover ML, Big Data, Analytics, Business Intelligence, and more!",
     ]
   },
   join: {
-    patterns: ['how to join', 'join the club', 'become member', 'membership', 'sign up', 'register', 'enroll'],
+    patterns: [
+      'join','register','enroll','sign up','signup','membership','member','how do i','become part','get in','apply','admission',
+      'be part','want to join','can i join','interested','whatsapp group'
+    ],
     responses: [
       "🎉 Ready to join the forge? It's super easy!\n\n1️⃣ Click **Join Data Forge** button above\n2️⃣ Join our WhatsApp community\n3️⃣ Attend our orientation session\n\n✅ Open to **ALL branches & ALL skill levels**! No prior data science experience needed.",
     ]
   },
   activities: {
-    patterns: ['activities', 'what do you do', 'events', 'workshops', 'bootcamp', 'datathon', 'competition', 'what happens'],
+    patterns: [
+      'activities','events','what do you do','workshops','bootcamp','datathon','competition','happening','schedule',
+      'programme','program','session','what happens','learn here','do here','conduct','organise','organize','research paper',
+      'dataset','case study','analytics challenge','paper circle','business case'
+    ],
     responses: [
       "⚡ We do some seriously cool stuff!\n\n📅 **Dataset of the Month** — Monthly data story presentations\n📖 **Research Paper Circle** — Weekly ML paper discussions\n💼 **Business Case Analysis** — Bi-weekly real-world cases\n🧩 **Analytics Challenges** — Weekly gamified puzzles\n🛠️ **Workshops** — Python, SQL, Tableau, Power BI\n⚡ **Datathons** — Hackathon-style competitions\n\nWhich one excites you the most? 😄",
     ]
   },
   domains: {
-    patterns: ['who can join', 'branches', 'domains', 'computer science', 'electronics', 'mechanical', 'civil', 'all branches', 'my branch'],
+    patterns: [
+      'branches','branch','domain','who can join','department','eligible','eligibility','cse','ece','eee',
+      'mechanical','civil','mech','biotech','information technology','electronics','electrical','all branches',
+      'my branch','any branch','engineering stream','which branch'
+    ],
     responses: [
       "🌐 Data Science applies to **EVERY ENGINEERING BRANCH**!\n\n💻 CS → ML pipelines, AI systems\n📡 Electronics → Sensor analytics, IoT\n⚙️ Mechanical → Predictive maintenance\n🏗️ Civil → Smart city analytics\n📈 Business → Market intelligence\n🏥 Healthcare → Clinical decision support\n💹 Finance → Risk analytics\n\nWhatever you study, data makes it better! 🚀",
     ]
   },
   python: {
-    patterns: ['python', 'learn python', 'programming', 'coding', 'pandas', 'numpy', 'tensorflow'],
+    patterns: [
+      'python','pandas','numpy','matplotlib','seaborn','scikit','sklearn','pytorch','keras','programming',
+      'coding','code','script','library','libraries','jupyter','notebook','pip','package','learn to code'
+    ],
     responses: [
       "🐍 Python is the bread and butter of Data Science! Here at Data Forge, we teach:\n\n• **Pandas** — Data manipulation\n• **NumPy** — Numerical computing\n• **Matplotlib/Seaborn** — Visualization\n• **Scikit-learn** — Machine Learning\n• **TensorFlow/PyTorch** — Deep Learning\n\n💡 Pro tip: Start with pandas and you'll be unstoppable! Join our Python workshops to get started! 🔥",
     ]
   },
   ml: {
-    patterns: ['machine learning', 'ml', 'ai', 'artificial intelligence', 'deep learning', 'neural network', 'model'],
+    patterns: [
+      'machine learning','ml','ai','artificial intelligence','deep learning','neural network','model','algorithm',
+      'supervised','unsupervised','reinforcement','classification','regression','clustering','prediction','nlp',
+      'natural language','computer vision','generative','llm','transformer','gpt','chatgpt'
+    ],
     responses: [
       "🤖 Machine Learning is at the core of what we do!\n\n**What you'll learn:**\n• Supervised & Unsupervised Learning\n• Neural Networks & Deep Learning\n• Natural Language Processing\n• Computer Vision\n• Model Deployment\n\n🏆 We even host ML competitions where you can win prizes! Ready to build your first model?",
     ]
   },
   sql: {
-    patterns: ['sql', 'database', 'data engineering', 'big data', 'hadoop', 'spark', 'queries'],
+    patterns: [
+      'sql','database','db','query','queries','data engineering','big data','hadoop','spark','pipeline',
+      'etl','warehouse','data lake','cloud','aws','gcp','azure','structured data','nosql','mongodb','postgres'
+    ],
     responses: [
       "🗄️ Data Engineering is the backbone of analytics!\n\n**Topics we cover:**\n• SQL & Advanced Queries\n• Database Design\n• Apache Spark & Hadoop\n• Data Pipelines\n• Cloud Data Platforms (AWS, GCP)\n\n💪 Strong SQL skills = strong data career. Our workshops cover this in depth!",
     ]
   },
   visualization: {
-    patterns: ['visualization', 'tableau', 'power bi', 'graphs', 'charts', 'dashboard', 'plotting'],
+    patterns: [
+      'visualization','visualisation','tableau','power bi','powerbi','graph','graphs','chart','charts','dashboard',
+      'plot','plotting','plotly','seaborn','matplotlib','visual','report','reporting','bi tool','infographic'
+    ],
     responses: [
       "📊 Data Visualization is storytelling with numbers!\n\n**Tools we teach:**\n• **Tableau** — Drag & drop dashboards\n• **Power BI** — Microsoft's analytics tool\n• **Matplotlib/Seaborn** — Python plotting\n• **Plotly** — Interactive web charts\n\n🎨 Great visualizations can change decisions! We have dedicated workshops for all these tools.",
     ]
   },
   career: {
-    patterns: ['career', 'job', 'placement', 'internship', 'salary', 'data scientist', 'future', 'opportunities'],
+    patterns: [
+      'career','job','placement','internship','salary','package','lpa','ctc','hire','hired','recruit','opportunity',
+      'future','scope','role','analyst','engineer','scientist','profession','work','industry','company','pay'
+    ],
     responses: [
       "🚀 Data Science careers are 🔥 right now!\n\n**Top roles you can aim for:**\n• Data Scientist — Avg ₹12-25 LPA\n• ML Engineer — Avg ₹15-30 LPA\n• Data Analyst — Avg ₹6-15 LPA\n• Data Engineer — Avg ₹12-22 LPA\n\n💼 Data Forge connects you with **industry professionals** and helps you build a portfolio that gets noticed. Your future self will thank you! 📈",
     ]
   },
   contact: {
-    patterns: ['contact', 'reach out', 'email', 'whatsapp', 'social media', 'instagram', 'linkedin', 'connect'],
+    patterns: [
+      'contact','reach','email','whatsapp','social','instagram','linkedin','twitter','connect','dm','message',
+      'find you','get in touch','follow','handle','link'
+    ],
     responses: [
       "📬 Want to reach us?\n\n• **WhatsApp Community** — Join via the button on this page\n• **Instagram** — @dataforge_srm\n• **LinkedIn** — Data Forge SRM IST Trichy\n\n💬 Or just keep chatting with me! I'm available 24/7, unlike humans 😄",
     ]
   },
   quiz: {
-    patterns: ['quiz', 'test me', 'question', 'challenge', 'trivia', 'game', 'play'],
+    patterns: ['quiz','test me','test','challenge','trivia','game','play','question','examine','assess','practice'],
     type: 'quiz',
     responses: ["Let's play! 🎮 Here comes a Data Science challenge!"]
   },
   feedback: {
-    patterns: ['feedback', 'rate', 'review', 'suggest', 'improve', 'opinion', 'thoughts'],
+    patterns: ['feedback','rate','rating','review','suggest','suggestion','improve','improvement','opinion','thoughts','experience','your view'],
     type: 'feedback',
     responses: ["Thanks for wanting to help us improve! 💚"]
   },
   thanks: {
-    patterns: ['thank', 'thanks', 'ty', 'appreciate', 'awesome', 'great', 'helpful'],
+    patterns: ['thank','thanks','ty','appreciate','awesome','great','helpful','nice','good','excellent','brilliant','perfect','cool'],
     responses: [
       "Anytime, Data Explorer! 🔥 That's what I'm forged for! Anything else you'd like to know?",
       "You're welcome! 💚 Keep forging ahead — the data world is yours to conquer! 🚀",
@@ -92,7 +126,7 @@ const KB = {
     ]
   },
   bye: {
-    patterns: ['bye', 'goodbye', 'see you', 'later', 'exit', 'quit', 'close'],
+    patterns: ['bye','goodbye','see you','later','exit','quit','close','take care','farewell','cya','ttyl'],
     responses: [
       "Forge on, Data Explorer! ⚡ Come back anytime — I'll be right here, processing petabytes of knowledge for you! 👋",
       "Until next time! 🔥 Remember: Data Forge is your gateway to the data world. Goodbye! 💚",
@@ -231,14 +265,45 @@ function randFrom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+// ─── Keyword Scoring NLP Engine ────────────────
+// Tokenises the user message into words, then scores every KB entry by
+// counting how many of its keywords appear anywhere in the message.
+// Returns the best-scoring entry (if score > 0), so natural free-form
+// questions are matched even when exact phrases don't appear.
 function matchIntent(text) {
   const lower = text.toLowerCase().trim();
+  // tokenise: split on anything that isn't a letter/digit/apostrophe
+  const tokens = lower.split(/[^a-z0-9']+/).filter(Boolean);
+
+  let bestKey  = null;
+  let bestData = null;
+  let bestScore = 0;
+
   for (const [key, data] of Object.entries(KB)) {
-    if (data.patterns && data.patterns.some(p => lower.includes(p))) {
-      return { key, data };
+    if (!data.patterns) continue;
+    let score = 0;
+
+    for (const pattern of data.patterns) {
+      // exact substring match (handles multi-word patterns like 'power bi')
+      if (lower.includes(pattern)) {
+        // multi-word phrases score higher
+        score += pattern.split(' ').length * 2;
+        continue;
+      }
+      // single-word pattern — check token set
+      if (!pattern.includes(' ') && tokens.includes(pattern)) {
+        score += 1;
+      }
+    }
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestKey   = key;
+      bestData  = data;
     }
   }
-  return null;
+
+  return bestScore > 0 ? { key: bestKey, data: bestData } : null;
 }
 
 // ─── DOM Helpers ───────────────────────────────
@@ -499,40 +564,31 @@ function processInput(text) {
   state.msgCount++;
   if (state.msgCount >= 10) awardBadge('forge_fan');
 
-  const lower = text.toLowerCase().trim();
+  // Run unified scoring matcher across ALL KB entries (quiz & feedback included)
+  const match = matchIntent(text);
 
-  // Quiz trigger
-  if (lower.includes('quiz') || lower.includes('test me') || lower.includes('challenge') || lower.includes('play')) {
-    triggerQuiz();
-    return;
-  }
-
-  // Feedback trigger
-  if (lower.includes('feedback') || lower.includes('rate') || lower.includes('review') || lower.includes('suggest')) {
-    triggerFeedback();
-    return;
-  }
-
-  // Match knowledge base
-  const match = matchIntent(lower);
   if (match) {
     const { key, data } = match;
+
+    // Route special intents
+    if (key === 'quiz')     { triggerQuiz();     return; }
+    if (key === 'feedback') { triggerFeedback(); return; }
+
+    // Standard KB response
     state.topicsExplored.add(key);
     if (state.topicsExplored.size >= 3) awardBadge('explorer');
     if (state.topicsExplored.size >= 5) awardBadge('curious');
 
     addXP(5, 'Learned something new!');
-
-    const response = randFrom(data.responses);
-    botReply(response, getFollowUpButtons(key));
+    botReply(randFrom(data.responses), getFollowUpButtons(key));
     return;
   }
 
-  // Fallback
+  // Fallback — no match found
   const fallbacks = [
-    "Hmm, I'm still learning! 🤔 Try asking me about:\n\n• **Data Forge** club\n• **How to Join**\n• **Activities & Events**\n• **Python, ML, SQL**\n• **Career paths**\n\nOr type **quiz** to test your skills! 🎮",
-    "That's beyond my current neural weights! 😅 But I can help with anything about Data Forge, Data Science topics, or even test your knowledge with a **quiz**! 🧠",
-    "Interesting question! I'm still being trained on that. 🤖 Try asking about our **activities**, **domains**, or type **quiz** to play! ⚡",
+    "Hmm, I'm not sure about that! 🤔 Try asking me about:\n\n• **Data Forge** — what the club does\n• **How to Join** — steps to become a member\n• **Activities** — workshops, datathons & more\n• **Python or ML** — tools and topics we teach\n• **Career paths** in Data Science\n\nOr type **quiz** to test your skills! 🎮",
+    "That's beyond my current neural weights! 😅 But I can help with anything about Data Forge, Data Science tools, or quiz you on your knowledge! 🧠\n\nTry: *\"what does data forge do?\"* or *\"how do I join?\"*",
+    "I'm still being trained on that one. 🤖 Ask me about our **activities**, **which branches can join**, or type **quiz** to play! ⚡",
   ];
   botReply(randFrom(fallbacks));
 }
