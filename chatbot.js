@@ -591,10 +591,14 @@ function buildChatWidget() {
     <!-- Launcher Button -->
     <button id="forge-launcher" aria-label="Open Data Forge Chat">
       <div class="forge-launcher-inner">
+        <div class="forge-launcher-ring"></div>
         <img src="forge-mascot.png" alt="F.O.R.G.E" id="forge-launcher-img" />
         <span class="forge-launcher-badge" id="forge-notif-badge">1</span>
       </div>
-      <div class="forge-launcher-label">Ask F.O.R.G.E!</div>
+      <div class="forge-launcher-text">
+        <span class="forge-launcher-name">F.O.R.G.E</span>
+        <span class="forge-launcher-sub">Ask me anything ⚡</span>
+      </div>
     </button>
 
     <!-- Chat Window -->
@@ -779,90 +783,134 @@ function injectChatStyles() {
     /* ── Wrapper ── */
     #forge-chat-wrapper {
       position: fixed;
-      bottom: 28px;
-      right: 28px;
+      bottom: 24px;
+      right: 24px;
       z-index: 99999;
       font-family: 'Space Grotesk', sans-serif;
-    }
-
-    /* ── Launcher ── */
-    #forge-launcher {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      border: none;
-      background: linear-gradient(135deg, #0c1f0c, #1a3a1a);
-      box-shadow: 0 0 0 2px rgba(57,255,20,.3), 0 8px 32px rgba(0,0,0,.6);
-      cursor: pointer;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      transition: transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s;
-      position: relative;
-      overflow: visible;
+      align-items: flex-end;
+      gap: 12px;
     }
+
+    /* ── Launcher — Pill Card Design ── */
+    #forge-launcher {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 18px 10px 10px;
+      border-radius: 50px;
+      border: 1.5px solid rgba(57,255,20,.35);
+      background: linear-gradient(135deg, #0a1f0a 0%, #0f2d0f 60%, #1a3a1a 100%);
+      box-shadow: 0 0 0 0 rgba(57,255,20,.4), 0 8px 32px rgba(0,0,0,.7), inset 0 1px 0 rgba(57,255,20,.08);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s, border-color .3s;
+    }
+    /* animated shimmer sweep */
+    #forge-launcher::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(105deg, transparent 40%, rgba(57,255,20,.08) 50%, transparent 60%);
+      transform: translateX(-100%);
+      transition: transform .5s;
+    }
+    #forge-launcher:hover::before { transform: translateX(100%); }
     #forge-launcher:hover {
-      transform: scale(1.12) translateY(-4px);
-      box-shadow: 0 0 0 2px #39ff14, 0 16px 48px rgba(57,255,20,.3);
+      transform: translateY(-3px) scale(1.03);
+      border-color: rgba(57,255,20,.7);
+      box-shadow: 0 0 0 4px rgba(57,255,20,.12), 0 12px 40px rgba(57,255,20,.2), 0 16px 48px rgba(0,0,0,.6);
     }
     #forge-launcher.forge-launcher-active {
-      box-shadow: 0 0 0 2px #39ff14, 0 8px 32px rgba(57,255,20,.4);
+      border-color: #39ff14;
+      box-shadow: 0 0 0 3px rgba(57,255,20,.2), 0 8px 32px rgba(57,255,20,.25);
     }
+    /* Avatar circle inside pill */
     .forge-launcher-inner {
       position: relative;
-      width: 52px;
-      height: 52px;
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
     }
+    .forge-launcher-ring {
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      border-top-color: #39ff14;
+      border-right-color: rgba(57,255,20,.3);
+      animation: launcherSpin 2.5s linear infinite;
+    }
+    @keyframes launcherSpin { to { transform: rotate(360deg); } }
     #forge-launcher-img {
-      width: 52px;
-      height: 52px;
+      width: 44px;
+      height: 44px;
       object-fit: cover;
       border-radius: 50%;
-      filter: drop-shadow(0 0 8px rgba(57,255,20,.5));
+      border: 2px solid rgba(57,255,20,.4);
+      filter: drop-shadow(0 0 6px rgba(57,255,20,.5));
+      position: relative;
+      z-index: 1;
     }
-    .forge-launcher-label {
-      font-size: .55rem;
-      color: #39ff14;
+    /* Text inside pill */
+    .forge-launcher-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1px;
+    }
+    .forge-launcher-name {
       font-family: 'Orbitron', sans-serif;
-      letter-spacing: .08em;
-      font-weight: 700;
-      text-shadow: 0 0 8px rgba(57,255,20,.5);
-      display: none;
+      font-size: .72rem;
+      font-weight: 800;
+      color: #39ff14;
+      letter-spacing: .1em;
+      text-shadow: 0 0 10px rgba(57,255,20,.6);
+      line-height: 1;
     }
-    #forge-launcher:hover .forge-launcher-label { display: block; }
+    .forge-launcher-sub {
+      font-size: .62rem;
+      color: #7aab7a;
+      letter-spacing: .04em;
+      line-height: 1;
+    }
+    /* Notification badge */
     .forge-launcher-badge {
       position: absolute;
-      top: -3px; right: -3px;
-      width: 18px; height: 18px;
+      top: 6px;
+      right: 6px;
+      width: 16px; height: 16px;
       background: #39ff14;
       color: #030803;
-      font-size: .6rem;
+      font-size: .58rem;
       font-weight: 800;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
+      border: 1.5px solid #0a1f0a;
       animation: badgePop .4s cubic-bezier(.34,1.56,.64,1);
     }
     @keyframes badgePop { from { transform: scale(0); } to { transform: scale(1); } }
 
-    /* Pulse ring */
+    /* Pulse animation */
     @keyframes forgePulse {
-      0% { box-shadow: 0 0 0 0 rgba(57,255,20,.5), 0 8px 32px rgba(0,0,0,.6); }
-      70% { box-shadow: 0 0 0 18px rgba(57,255,20,0), 0 8px 32px rgba(0,0,0,.6); }
+      0%   { box-shadow: 0 0 0 0 rgba(57,255,20,.5), 0 8px 32px rgba(0,0,0,.6); }
+      70%  { box-shadow: 0 0 0 14px rgba(57,255,20,0), 0 8px 32px rgba(0,0,0,.6); }
       100% { box-shadow: 0 0 0 0 rgba(57,255,20,0), 0 8px 32px rgba(0,0,0,.6); }
     }
     #forge-launcher.forge-pulse { animation: forgePulse 1.5s ease-out 3; }
 
     /* ── Chat Window ── */
     #forge-chat-window {
-      position: absolute;
-      bottom: 88px;
-      right: 0;
+      position: fixed;
+      bottom: 100px;
+      right: 24px;
       width: 390px;
-      max-height: 620px;
+      height: min(620px, calc(100vh - 120px));
+      max-height: calc(100vh - 120px);
       background: #060e06;
       border: 1px solid rgba(57,255,20,.2);
       border-radius: 20px;
@@ -1390,15 +1438,25 @@ function injectChatStyles() {
     /* ── Mobile Responsive ── */
     @media (max-width: 480px) {
       #forge-chat-window {
-        width: calc(100vw - 20px);
-        right: -14px;
-        max-height: 72vh;
-        bottom: 80px;
+        width: calc(100vw - 16px);
+        right: 8px;
+        left: 8px;
+        bottom: 90px;
+        height: min(580px, calc(100vh - 110px));
+        max-height: calc(100vh - 110px);
       }
       #forge-chat-wrapper {
-        bottom: 16px;
-        right: 16px;
+        bottom: 12px;
+        right: 12px;
       }
+      #forge-launcher {
+        padding: 8px 14px 8px 8px;
+        gap: 8px;
+      }
+      .forge-launcher-inner { width: 38px; height: 38px; }
+      #forge-launcher-img { width: 38px; height: 38px; }
+      .forge-launcher-name { font-size: .65rem; }
+      .forge-launcher-sub { font-size: .58rem; }
     }
   `;
   document.head.appendChild(style);
