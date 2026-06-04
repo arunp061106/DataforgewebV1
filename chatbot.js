@@ -266,33 +266,27 @@ function randFrom(arr) {
 }
 
 // ─── Keyword Scoring NLP Engine ────────────────
-// Tokenises the user message into words, then scores every KB entry by
-// counting how many of its keywords appear anywhere in the message.
-// Returns the best-scoring entry (if score > 0), so natural free-form
-// questions are matched even when exact phrases don't appear.
+// • Multi-word patterns ('machine learning') → substring match, score = word_count × 2
+// • Single-word patterns ('ml', 'hi', 'python') → WHOLE-WORD token match only, score = 2
+//   This stops 'hi' firing inside "mac-hi-ne", 'ml' inside other words, etc.
 function matchIntent(text) {
-  const lower = text.toLowerCase().trim();
-  // tokenise: split on anything that isn't a letter/digit/apostrophe
-  const tokens = lower.split(/[^a-z0-9']+/).filter(Boolean);
+  const lower    = text.toLowerCase().trim();
+  const tokenSet = new Set(lower.split(/[^a-z0-9']+/).filter(Boolean));
 
-  let bestKey  = null;
-  let bestData = null;
-  let bestScore = 0;
+  let bestKey = null, bestData = null, bestScore = 0;
 
   for (const [key, data] of Object.entries(KB)) {
     if (!data.patterns) continue;
     let score = 0;
 
     for (const pattern of data.patterns) {
-      // exact substring match (handles multi-word patterns like 'power bi')
-      if (lower.includes(pattern)) {
-        // multi-word phrases score higher
-        score += pattern.split(' ').length * 2;
-        continue;
-      }
-      // single-word pattern — check token set
-      if (!pattern.includes(' ') && tokens.includes(pattern)) {
-        score += 1;
+      const words = pattern.split(/\s+/);
+      if (words.length > 1) {
+        // Multi-word phrase: exact substring required
+        if (lower.includes(pattern)) score += words.length * 2;
+      } else {
+        // Single word: must be a standalone token, never part of another word
+        if (tokenSet.has(pattern)) score += 2;
       }
     }
 
@@ -305,6 +299,7 @@ function matchIntent(text) {
 
   return bestScore > 0 ? { key: bestKey, data: bestData } : null;
 }
+
 
 // ─── DOM Helpers ───────────────────────────────
 function el(id) { return document.getElementById(id); }
