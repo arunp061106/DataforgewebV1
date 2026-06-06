@@ -211,12 +211,38 @@
     </div>
   </section>
 
-  <!-- ── HORIZONTAL SCROLL FEATURE SECTION (Srijan Style) ── -->
-  <div class="horizontal-scroll-section" id="features-section">
-    <div class="sticky-wrapper">
-      <div class="horizontal-track">
-        
-        <div class="horizontal-panel">
+  <!-- ── VERTICAL CURVED TIMELINE PATH SECTION (Srijan '26 Style) ── -->
+  <div id="features-timeline-section">
+    <!-- Ambient glows -->
+    <div class="timeline-bg-glow glow-1" aria-hidden="true"></div>
+    <div class="timeline-bg-glow glow-2" aria-hidden="true"></div>
+    
+    <!-- SVG Winding Path -->
+    <div class="timeline-path-container">
+      <svg class="timeline-svg" viewBox="0 0 200 1200" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="pathGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#ff3300" />
+            <stop offset="50%" stop-color="#ff6600" />
+            <stop offset="100%" stop-color="#ff0055" />
+          </linearGradient>
+        </defs>
+        <!-- Background Path -->
+        <path class="timeline-base-path" d="M100,0 C180,120 180,280 100,400 C20,520 20,680 100,800 C180,920 180,1080 100,1200" fill="none" />
+        <!-- Active Path -->
+        <path class="timeline-active-path" id="timelineActivePath" d="M100,0 C180,120 180,280 100,400 C20,520 20,680 100,800 C180,920 180,1080 100,1200" fill="none" />
+      </svg>
+      <!-- Glowing dot indicator -->
+      <div class="timeline-glow-dot" id="timelineGlowDot"></div>
+    </div>
+
+    <!-- Timeline Nodes & Content Blocks -->
+    <div class="timeline-content-wrap container">
+      <!-- NODE 1: VISION -->
+      <div class="timeline-row row-left" id="node-vision">
+        <div class="timeline-connector connector-left"></div>
+        <div class="timeline-dot-anchor"></div>
+        <div class="timeline-card-wrapper">
           <!-- ── VISION ─────────────────────────────── -->
           <section id="vision" class="section">
             <div class="vision-layout">
@@ -288,8 +314,13 @@
             </div>
           </section>
         </div>
+      </div>
 
-        <div class="horizontal-panel">
+      <!-- NODE 2: DOMAINS -->
+      <div class="timeline-row row-right" id="node-domains">
+        <div class="timeline-connector connector-right"></div>
+        <div class="timeline-dot-anchor"></div>
+        <div class="timeline-card-wrapper">
           <!-- ── DOMAINS ────────────────────────────── -->
           <section id="domains" class="section">
             <div class="container">
@@ -354,8 +385,13 @@
             </div>
           </section>
         </div>
+      </div>
 
-        <div class="horizontal-panel">
+      <!-- NODE 3: ACTIVITIES -->
+      <div class="timeline-row row-left" id="node-activities">
+        <div class="timeline-connector connector-left"></div>
+        <div class="timeline-dot-anchor"></div>
+        <div class="timeline-card-wrapper">
           <!-- ── ACTIVITIES ─────────────────────────── -->
           <section id="activities" class="section">
             <div class="container">
@@ -409,8 +445,8 @@
             </div>
           </section>
         </div>
-        
       </div>
+
     </div>
   </div>
 

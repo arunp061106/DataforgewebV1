@@ -293,14 +293,38 @@ document.querySelectorAll('.cta-primary').forEach(btn => {
   });
 });
 
-// ── Scroll-Linked Animations & Graphics ───────────────────────
+// ── Scroll-Linked Animations & Graphics (Srijan Winding Path) ──
 (function() {
   const gridScanner     = document.querySelector('.scroll-grid-scanner');
   const ball1           = document.querySelector('.ball-1');
   const ball2           = document.querySelector('.ball-2');
   const ball3           = document.querySelector('.ball-3');
-  const featuresSection = document.getElementById('features-section');
-  const horizontalTrack = document.querySelector('.horizontal-track');
+  
+  const timelineSection = document.getElementById('features-timeline-section');
+  const activePath      = document.getElementById('timelineActivePath');
+  const glowDot         = document.getElementById('timelineGlowDot');
+  const timelineRows    = document.querySelectorAll('.timeline-row');
+
+  let pathLength = 0;
+  if (activePath) {
+    try {
+      pathLength = activePath.getTotalLength();
+      activePath.style.strokeDasharray = pathLength;
+      activePath.style.strokeDashoffset = pathLength;
+    } catch (e) {
+      console.warn("SVG path length query not ready", e);
+    }
+  }
+
+  function handleResize() {
+    if (activePath) {
+      try {
+        pathLength = activePath.getTotalLength();
+        activePath.style.strokeDasharray = pathLength;
+      } catch (e) {}
+    }
+  }
+  window.addEventListener('resize', handleResize);
 
   function handleScroll() {
     const scrollTop     = window.scrollY || document.documentElement.scrollTop;
@@ -317,25 +341,77 @@ document.querySelectorAll('.cta-primary').forEach(btn => {
     if (ball2) ball2.style.transform = `translate(${scrollPercent * -140}px, ${scrollPercent * 110}px) scale(${1 - scrollPercent * 0.15})`;
     if (ball3) ball3.style.transform = `translate(${scrollPercent * 80}px, ${scrollPercent * 140}px) scale(${1 + scrollPercent * 0.3})`;
 
-    // 3. Update Pinned Horizontal Scroll Track
-    if (featuresSection && horizontalTrack && window.innerWidth > 900) {
-      const secTop = featuresSection.offsetTop;
-      const secHeight = featuresSection.offsetHeight;
+    // 3. Update Curved Path Drawing and Traveler Dot Positioning
+    if (timelineSection && activePath && glowDot) {
+      const secTop = timelineSection.offsetTop;
+      const secHeight = timelineSection.offsetHeight;
       const viewportHeight = window.innerHeight;
 
-      if (scrollTop >= secTop && scrollTop <= (secTop + secHeight - viewportHeight)) {
-        const progress = (scrollTop - secTop) / (secHeight - viewportHeight);
-        horizontalTrack.style.transform = `translateX(-${progress * 200}vw)`;
-      } else if (scrollTop < secTop) {
-        horizontalTrack.style.transform = 'translateX(0vw)';
-      } else if (scrollTop > (secTop + secHeight - viewportHeight)) {
-        horizontalTrack.style.transform = 'translateX(-200vw)';
+      // Start path drawing when top of timeline section scrolls into view
+      // End when the bottom of timeline section scrolls out of view
+      const scrollStart = secTop - viewportHeight;
+      const scrollEnd = secTop + secHeight;
+      
+      let progress = 0;
+      if (scrollTop >= scrollStart && scrollTop <= scrollEnd) {
+        progress = (scrollTop - scrollStart) / (scrollEnd - scrollStart);
+      } else if (scrollTop > scrollEnd) {
+        progress = 1;
       }
+      progress = Math.min(1, Math.max(0, progress));
+
+      // Update stroke-dashoffset to draw active path overlay
+      const drawLength = pathLength * progress;
+      activePath.style.strokeDashoffset = pathLength - drawLength;
+
+      // Query coordinates of point at current draw length
+      try {
+        let point = activePath.getPointAtLength(drawLength);
+        
+        // Safety mobile fallback if CSS path override is not fully supported in getPointAtLength queries
+        if (window.innerWidth <= 900) {
+          point = { x: 30, y: point.y };
+        }
+
+        // Map point from SVG viewBox space (200x1200) to actual rendered pixels of the SVG
+        const svgElement = activePath.ownerSVGElement;
+        if (svgElement) {
+          const svgRect = svgElement.getBoundingClientRect();
+          const scaleX = svgRect.width / 200;
+          const scaleY = svgRect.height / 1200;
+
+          const dotX = point.x * scaleX;
+          const dotY = point.y * scaleY;
+
+          glowDot.style.left = `${dotX}px`;
+          glowDot.style.top = `${dotY}px`;
+        }
+      } catch (e) {}
     }
+
+    // 4. Highlight Timeline Nodes and Reveal Content Cards
+    timelineRows.forEach(row => {
+      const card = row.querySelector('.timeline-card-wrapper');
+      if (!card) return;
+      
+      const rect = card.getBoundingClientRect();
+      const triggerPoint = window.innerHeight * 0.8;
+
+      if (rect.top < triggerPoint) {
+        row.classList.add('node-active');
+        card.classList.add('active');
+      } else {
+        row.classList.remove('node-active');
+        card.classList.remove('active');
+      }
+    });
   }
 
   // Bind passive listener for optimal scrolling FPS
   window.addEventListener('scroll', handleScroll, { passive: true });
   // Call once initially to coordinate load state
-  handleScroll();
+  setTimeout(() => {
+    handleResize();
+    handleScroll();
+  }, 100);
 })();

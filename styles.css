@@ -1549,65 +1549,276 @@ body.gate-active {
   transition: top 0.1s ease-out;
 }
 
-/* ─── HORIZONTAL SCROLL FEATURE SECTION (Srijan Style) ─── */
-.horizontal-scroll-section {
+/* ─── VERTICAL CURVED TIMELINE PATH SECTION (Srijan '26 Style) ─── */
+#features-timeline-section {
   position: relative;
-  height: 300vh; /* 3 viewports scroll height */
-  background: var(--bg);
-  z-index: 2;
-}
-.sticky-wrapper {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-}
-.horizontal-track {
-  display: flex;
-  width: 300vw;
-  height: 100%;
-  will-change: transform;
-  transition: transform 0.08s ease-out;
-}
-.horizontal-panel {
-  width: 100vw;
-  height: 100%;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-  overflow: hidden;
-}
-.horizontal-panel section {
-  padding: 0 !important;
   width: 100%;
+  background: linear-gradient(to bottom, #050202, #0e0505, #050202);
+  padding: 100px 0;
+  z-index: 2;
+  overflow: hidden;
 }
 
+/* Background Glows */
+.timeline-bg-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(160px);
+  pointer-events: none;
+  opacity: 0.15;
+  mix-blend-mode: screen;
+}
+.timeline-bg-glow.glow-1 {
+  width: min(600px, 90vw);
+  aspect-ratio: 1;
+  background: radial-gradient(circle, #ff3300 0%, transparent 70%);
+  top: 15%;
+  left: -15%;
+}
+.timeline-bg-glow.glow-2 {
+  width: min(650px, 100vw);
+  aspect-ratio: 1;
+  background: radial-gradient(circle, #ff6600 0%, transparent 70%);
+  bottom: 20%;
+  right: -20%;
+}
+
+/* Path SVG Container */
+.timeline-path-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  pointer-events: none;
+  z-index: 10;
+}
+.timeline-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Base background winding path */
+.timeline-base-path {
+  stroke: rgba(255, 60, 0, 0.08);
+  stroke-width: 4px;
+  stroke-linecap: round;
+  stroke-dasharray: 8 6; /* dotted/dashed trail */
+}
+
+/* Active animated overlay path */
+.timeline-active-path {
+  stroke: url(#pathGradient);
+  stroke-width: 5px;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 8px rgba(255, 51, 0, 0.6)) drop-shadow(0 0 15px rgba(255, 102, 0, 0.3));
+  stroke-dasharray: 3000; /* Will be updated in JS */
+  stroke-dashoffset: 3000;
+  transition: stroke-dashoffset 0.05s ease-out;
+}
+
+/* Glow dot traveler */
+.timeline-glow-dot {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 
+    0 0 10px #ffffff,
+    0 0 20px #ff3300,
+    0 0 40px #ff6600;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  left: 50%;
+  top: 0;
+  z-index: 12;
+  will-change: transform, left, top;
+}
+
+/* Content layout wrapper */
+.timeline-content-wrap {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+/* Layout Row */
+.timeline-row {
+  display: grid;
+  grid-template-columns: 1fr 120px 1fr;
+  align-items: center;
+  position: relative;
+}
+
+/* Card wrappers */
+.timeline-card-wrapper {
+  background: rgba(14, 8, 8, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 60, 0, 0.12);
+  border-radius: 20px;
+  padding: 10px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 51, 0, 0.03);
+  transition: border-color 0.4s var(--ease), box-shadow 0.4s var(--ease), transform 0.4s var(--ease), opacity 0.6s var(--ease);
+  opacity: 0.15;
+  transform: translateY(40px);
+}
+.timeline-card-wrapper.active {
+  opacity: 1;
+  transform: translateY(0);
+  border-color: rgba(255, 60, 0, 0.35);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6), 0 0 40px rgba(255, 51, 0, 0.08);
+}
+.timeline-card-wrapper:hover {
+  border-color: rgba(255, 60, 0, 0.6);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.65), 0 0 50px rgba(255, 51, 0, 0.15);
+  transform: translateY(-4px);
+}
+
+.timeline-card-wrapper section {
+  padding: 30px 20px !important;
+}
+
+/* Custom Theme Overrides for Bento Cards & Domain Cards inside timeline */
+#features-timeline-section .bento-card,
+#features-timeline-section .dcard,
+#features-timeline-section .act-card {
+  border-color: rgba(255, 60, 0, 0.12) !important;
+  background: rgba(20, 10, 10, 0.5) !important;
+}
+#features-timeline-section .bento-card:hover,
+#features-timeline-section .dcard:hover,
+#features-timeline-section .act-card:hover {
+  border-color: rgba(255, 102, 0, 0.45) !important;
+  box-shadow: 0 0 24px rgba(255, 51, 0, 0.12) !important;
+}
+#features-timeline-section .bento-num,
+#features-timeline-section .dcard-num,
+#features-timeline-section .act-num,
+#features-timeline-section .accent-fill {
+  color: #ff5500 !important;
+}
+#features-timeline-section .pill {
+  border-color: rgba(255, 60, 0, 0.25) !important;
+  color: #ff6600 !important;
+  background: rgba(20, 10, 10, 0.5) !important;
+  text-shadow: 0 0 8px rgba(255, 51, 0, 0.3) !important;
+}
+#features-timeline-section .quote-line {
+  background: linear-gradient(to right, transparent, #ff5500, transparent) !important;
+}
+
+/* Path Anchors & Connector Lines */
+.timeline-dot-anchor {
+  grid-column: 2;
+  justify-self: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #080303;
+  border: 3px solid rgba(255, 60, 0, 0.25);
+  box-shadow: 0 0 10px rgba(255, 51, 0, 0.1);
+  z-index: 11;
+  transition: border-color 0.4s var(--ease), background 0.4s var(--ease), box-shadow 0.4s var(--ease);
+}
+.timeline-row.node-active .timeline-dot-anchor {
+  border-color: #ff3300;
+  background: #ffffff;
+  box-shadow: 0 0 15px #ff3300, 0 0 5px #ffffff;
+}
+
+.timeline-connector {
+  position: absolute;
+  top: 50%;
+  height: 2px;
+  background: linear-gradient(to right, transparent, rgba(255, 60, 0, 0.2), transparent);
+  width: 0%;
+  z-index: 4;
+  transform: translateY(-50%);
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s;
+}
+
+/* Connector Positions on grid */
+.connector-left {
+  right: 50%;
+  left: auto;
+  border-top: 1.5px dashed rgba(255, 60, 0, 0.15);
+  background: none !important;
+  height: 1px;
+}
+.connector-right {
+  left: 50%;
+  right: auto;
+  border-top: 1.5px dashed rgba(255, 60, 0, 0.15);
+  background: none !important;
+  height: 1px;
+}
+.timeline-row.node-active .timeline-connector {
+  border-top-style: solid;
+  border-top-color: #ff5500;
+  filter: drop-shadow(0 0 3px rgba(255, 51, 0, 0.5));
+}
+
+/* Grid Alignments */
+.row-left .timeline-card-wrapper {
+  grid-column: 1;
+}
+.row-right .timeline-card-wrapper {
+  grid-column: 3;
+}
+
+.row-left .connector-left {
+  width: calc(50% - 60px);
+}
+.row-right .connector-right {
+  width: calc(50% - 60px);
+}
+
+/* Responsive Overrides (Screen width <= 900px) */
 @media (max-width: 900px) {
-  .horizontal-scroll-section {
-    height: auto !important;
+  #features-timeline-section {
+    padding: 60px 0;
   }
-  .sticky-wrapper {
-    position: relative !important;
-    height: auto !important;
-    overflow: visible !important;
-    display: block !important;
+  .timeline-path-container {
+    left: 28px;
+    transform: none;
+    width: 60px;
   }
-  .horizontal-track {
-    display: block !important;
-    width: 100% !important;
-    transform: none !important;
+  .timeline-base-path,
+  .timeline-active-path {
+    /* Straighten the curve path on mobile for clean left timeline alignment */
+    d: path("M30,0 L30,1200") !important;
   }
-  .horizontal-panel {
-    width: 100% !important;
-    height: auto !important;
-    padding: 60px 0 !important;
+  .timeline-glow-dot {
+    left: 30px;
   }
-  .horizontal-panel section {
-    padding: 68px 0 !important;
+  .timeline-row {
+    grid-template-columns: 60px 1fr !important;
+    gap: 0;
+    align-items: flex-start;
+  }
+  .timeline-dot-anchor {
+    grid-column: 1 !important;
+    margin-top: 32px;
+  }
+  .timeline-connector {
+    display: none !important; /* hide indicator lines on mobile */
+  }
+  .timeline-card-wrapper {
+    grid-column: 2 !important;
+    margin-left: 10px;
+    margin-right: 0;
+  }
+  .row-left .timeline-card-wrapper,
+  .row-right .timeline-card-wrapper {
+    grid-column: 2 !important;
+  }
+  .timeline-card-wrapper section {
+    padding: 24px 12px !important;
   }
 }
