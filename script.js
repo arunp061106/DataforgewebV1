@@ -293,7 +293,7 @@ document.querySelectorAll('.cta-primary').forEach(btn => {
   });
 });
 
-// ── Scroll-Linked Animations & Graphics (Srijan Winding Path) ──
+// ── Scroll-Linked Animations & Graphics (Immersive Matrix Rail) ──
 (function() {
   const gridScanner     = document.querySelector('.scroll-grid-scanner');
   const ball1           = document.querySelector('.ball-1');
@@ -301,31 +301,78 @@ document.querySelectorAll('.cta-primary').forEach(btn => {
   const ball3           = document.querySelector('.ball-3');
   
   const timelineSection = document.getElementById('features-timeline-section');
-  const activePath      = document.getElementById('timelineActivePath');
-  const glowDot         = document.getElementById('timelineGlowDot');
+  const activeLine      = document.getElementById('activeRailLine');
+  const railGlowDot     = document.getElementById('railGlowDot');
   const timelineRows    = document.querySelectorAll('.timeline-row');
 
-  let pathLength = 0;
-  if (activePath) {
-    try {
-      pathLength = activePath.getTotalLength();
-      activePath.style.strokeDasharray = pathLength;
-      activePath.style.strokeDashoffset = pathLength;
-    } catch (e) {
-      console.warn("SVG path length query not ready", e);
+  // ── Matrix Rain for the Rail Canvas ──
+  const railCanvas = document.getElementById('railCanvas');
+  let railCtx, rW = 0, rH = 0, railColumns = [];
+  const RAIL_CHARS = '010101DATAFORGEANALYTICSMLΨΩΔ';
+
+  function initRailMatrix() {
+    if (!railCanvas) return;
+    railCtx = railCanvas.getContext('2d');
+    
+    const track = railCanvas.parentElement;
+    if (!track) return;
+    
+    const currentWidth = track.clientWidth;
+    const currentHeight = track.clientHeight;
+    
+    // Only re-initialize if dimensions have changed
+    if (rW === currentWidth && rH === currentHeight && railColumns.length > 0) return;
+    
+    rW = railCanvas.width = currentWidth;
+    rH = railCanvas.height = currentHeight;
+    
+    // Column every 8 pixels for density
+    const colsCount = Math.floor(rW / 8) + 1;
+    railColumns = [];
+    for (let i = 0; i < colsCount; i++) {
+      railColumns.push({
+        x: i * 8,
+        y: Math.random() * rH,
+        speed: 1.2 + Math.random() * 2.8,
+        fontSize: 7 + Math.random() * 5,
+        opacity: 0.15 + Math.random() * 0.45
+      });
     }
   }
 
+  function drawRailMatrix() {
+    if (!railCanvas || !railCtx) return;
+    
+    railCtx.fillStyle = 'rgba(4, 9, 4, 0.16)';
+    railCtx.fillRect(0, 0, rW, rH);
+    
+    for (let i = 0; i < railColumns.length; i++) {
+      const col = railColumns[i];
+      railCtx.font = `bold ${col.fontSize}px 'Space Mono', monospace`;
+      
+      railCtx.fillStyle = Math.random() > 0.85 
+        ? `rgba(0, 245, 212, ${col.opacity})` 
+        : `rgba(57, 255, 20, ${col.opacity})`;
+        
+      const char = RAIL_CHARS[Math.floor(Math.random() * RAIL_CHARS.length)];
+      railCtx.fillText(char, col.x, col.y);
+      
+      col.y += col.speed;
+      if (col.y > rH) {
+        col.y = -20;
+        col.speed = 1.2 + Math.random() * 2.8;
+      }
+    }
+    requestAnimationFrame(drawRailMatrix);
+  }
+
+  // Handle Resize and recalculate canvas dimensions
   function handleResize() {
-    if (activePath) {
-      try {
-        pathLength = activePath.getTotalLength();
-        activePath.style.strokeDasharray = pathLength;
-      } catch (e) {}
-    }
+    initRailMatrix();
   }
-  window.addEventListener('resize', handleResize);
+  window.addEventListener('resize', handleResize, { passive: true });
 
+  // Scroll handler
   function handleScroll() {
     const scrollTop     = window.scrollY || document.documentElement.scrollTop;
     const scrollHeight  = document.documentElement.scrollHeight - window.innerHeight;
@@ -341,16 +388,15 @@ document.querySelectorAll('.cta-primary').forEach(btn => {
     if (ball2) ball2.style.transform = `translate(${scrollPercent * -140}px, ${scrollPercent * 110}px) scale(${1 - scrollPercent * 0.15})`;
     if (ball3) ball3.style.transform = `translate(${scrollPercent * 80}px, ${scrollPercent * 140}px) scale(${1 + scrollPercent * 0.3})`;
 
-    // 3. Update Curved Path Drawing and Traveler Dot Positioning
-    if (timelineSection && activePath && glowDot) {
+    // 3. Update Rail Progress Line and Traveler Dot Positioning
+    if (timelineSection && activeLine && railGlowDot) {
       const secTop = timelineSection.offsetTop;
       const secHeight = timelineSection.offsetHeight;
       const viewportHeight = window.innerHeight;
 
-      // Start path drawing when top of timeline section scrolls into view
-      // End when the bottom of timeline section scrolls out of view
-      const scrollStart = secTop - viewportHeight;
-      const scrollEnd = secTop + secHeight;
+      // Start line filling when top of timeline section is in view, end before it leaves
+      const scrollStart = secTop - viewportHeight * 0.6;
+      const scrollEnd = secTop + secHeight - viewportHeight * 0.4;
       
       let progress = 0;
       if (scrollTop >= scrollStart && scrollTop <= scrollEnd) {
@@ -360,33 +406,9 @@ document.querySelectorAll('.cta-primary').forEach(btn => {
       }
       progress = Math.min(1, Math.max(0, progress));
 
-      // Update stroke-dashoffset to draw active path overlay
-      const drawLength = pathLength * progress;
-      activePath.style.strokeDashoffset = pathLength - drawLength;
-
-      // Query coordinates of point at current draw length
-      try {
-        let point = activePath.getPointAtLength(drawLength);
-        
-        // Safety mobile fallback if CSS path override is not fully supported in getPointAtLength queries
-        if (window.innerWidth <= 900) {
-          point = { x: 30, y: point.y };
-        }
-
-        // Map point from SVG viewBox space (200x1200) to actual rendered pixels of the SVG
-        const svgElement = activePath.ownerSVGElement;
-        if (svgElement) {
-          const svgRect = svgElement.getBoundingClientRect();
-          const scaleX = svgRect.width / 200;
-          const scaleY = svgRect.height / 1200;
-
-          const dotX = point.x * scaleX;
-          const dotY = point.y * scaleY;
-
-          glowDot.style.left = `${dotX}px`;
-          glowDot.style.top = `${dotY}px`;
-        }
-      } catch (e) {}
+      // Update active height and dot position
+      activeLine.style.height = `${progress * 100}%`;
+      railGlowDot.style.top = `${progress * 100}%`;
     }
 
     // 4. Highlight Timeline Nodes and Reveal Content Cards
@@ -409,9 +431,15 @@ document.querySelectorAll('.cta-primary').forEach(btn => {
 
   // Bind passive listener for optimal scrolling FPS
   window.addEventListener('scroll', handleScroll, { passive: true });
+  
   // Call once initially to coordinate load state
   setTimeout(() => {
-    handleResize();
+    initRailMatrix();
+    drawRailMatrix();
     handleScroll();
   }, 100);
+
+  // Re-check heights a few times as image/layout loads
+  setTimeout(initRailMatrix, 600);
+  setTimeout(initRailMatrix, 1600);
 })();

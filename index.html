@@ -211,36 +211,26 @@
     </div>
   </section>
 
-  <!-- ── VERTICAL CURVED TIMELINE PATH SECTION (Srijan '26 Style) ── -->
+  <!-- ── IMMERSIVE VERTICAL MATRIX RAIL TIMELINE ── -->
   <div id="features-timeline-section">
     <!-- Ambient glows -->
     <div class="timeline-bg-glow glow-1" aria-hidden="true"></div>
     <div class="timeline-bg-glow glow-2" aria-hidden="true"></div>
-    
-    <!-- SVG Winding Path -->
-    <div class="timeline-path-container">
-      <svg class="timeline-svg" viewBox="0 0 200 1200" preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="pathGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#39ff14" />
-            <stop offset="50%" stop-color="#00f5d4" />
-            <stop offset="100%" stop-color="#2bcc0f" />
-          </linearGradient>
-        </defs>
-        <!-- Background Path -->
-        <path class="timeline-base-path" d="M100,0 C180,120 180,280 100,400 C20,520 20,680 100,800 C180,920 180,1080 100,1200" fill="none" />
-        <!-- Active Path -->
-        <path class="timeline-active-path" id="timelineActivePath" d="M100,0 C180,120 180,280 100,400 C20,520 20,680 100,800 C180,920 180,1080 100,1200" fill="none" />
-      </svg>
-      <!-- Glowing dot indicator -->
-      <div class="timeline-glow-dot" id="timelineGlowDot"></div>
-    </div>
 
-    <!-- Timeline Nodes & Content Blocks -->
+    <!-- Timeline Content Wrapper -->
     <div class="timeline-content-wrap container">
+      <!-- Matrix Rail Container -->
+      <div class="matrix-rail-container" aria-hidden="true">
+        <div class="matrix-rail-track">
+          <canvas id="railCanvas"></canvas>
+          <div class="active-rail-line" id="activeRailLine"></div>
+          <div class="rail-glow-dot" id="railGlowDot"></div>
+        </div>
+      </div>
+
       <!-- NODE 1: VISION -->
-      <div class="timeline-row row-left" id="node-vision">
-        <div class="timeline-connector connector-left"></div>
+      <div class="timeline-row" id="node-vision">
+        <div class="timeline-connector"></div>
         <div class="timeline-dot-anchor"></div>
         <div class="timeline-card-wrapper">
           <!-- ── VISION ─────────────────────────────── -->
@@ -317,8 +307,8 @@
       </div>
 
       <!-- NODE 2: DOMAINS -->
-      <div class="timeline-row row-right" id="node-domains">
-        <div class="timeline-connector connector-right"></div>
+      <div class="timeline-row" id="node-domains">
+        <div class="timeline-connector"></div>
         <div class="timeline-dot-anchor"></div>
         <div class="timeline-card-wrapper">
           <!-- ── DOMAINS ────────────────────────────── -->
@@ -388,8 +378,8 @@
       </div>
 
       <!-- NODE 3: ACTIVITIES -->
-      <div class="timeline-row row-left" id="node-activities">
-        <div class="timeline-connector connector-left"></div>
+      <div class="timeline-row" id="node-activities">
+        <div class="timeline-connector"></div>
         <div class="timeline-dot-anchor"></div>
         <div class="timeline-card-wrapper">
           <!-- ── ACTIVITIES ─────────────────────────── -->

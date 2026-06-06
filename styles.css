@@ -1594,59 +1594,71 @@ body.gate-active {
   right: -20%;
 }
 
-/* Path SVG Container */
-.timeline-path-container {
+/* Matrix Rail Container */
+.matrix-rail-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 120px;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.matrix-rail-track {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 200px;
-  pointer-events: none;
-  z-index: 10;
+  width: 48px;
+  border-left: 2px solid rgba(57, 255, 20, 0.22);
+  border-right: 2px solid rgba(57, 255, 20, 0.22);
+  background: rgba(4, 9, 4, 0.82);
+  box-shadow: 
+    0 0 20px rgba(57, 255, 20, 0.06),
+    inset 0 0 15px rgba(0, 0, 0, 0.95);
+  overflow: hidden;
 }
-.timeline-svg {
+
+#railCanvas {
+  display: block;
   width: 100%;
   height: 100%;
-  display: block;
+  opacity: 0.9;
 }
 
-/* Base background winding path */
-.timeline-base-path {
-  stroke: rgba(57, 255, 20, 0.08);
-  stroke-width: 4px;
-  stroke-linecap: round;
-  stroke-dasharray: 8 6; /* dotted/dashed trail */
-}
-
-/* Active animated overlay path */
-.timeline-active-path {
-  stroke: url(#pathGradient);
-  stroke-width: 5px;
-  stroke-linecap: round;
-  filter: drop-shadow(0 0 8px rgba(57, 255, 20, 0.6)) drop-shadow(0 0 15px rgba(0, 245, 212, 0.3));
-  stroke-dasharray: 3000; /* Will be updated in JS */
-  stroke-dashoffset: 3000;
-  transition: stroke-dashoffset 0.05s ease-out;
-}
-
-/* Glow dot traveler */
-.timeline-glow-dot {
+.active-rail-line {
   position: absolute;
-  width: 14px;
-  height: 14px;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  background: linear-gradient(to bottom, var(--g), var(--cyan));
+  box-shadow: 
+    0 0 10px var(--g),
+    0 0 22px var(--cyan);
+  height: 0%;
+  transition: height 0.1s ease-out;
+  z-index: 2;
+}
+
+.rail-glow-dot {
+  position: absolute;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   background: #ffffff;
   box-shadow: 
     0 0 10px #ffffff,
-    0 0 20px var(--g),
-    0 0 40px var(--cyan);
+    0 0 22px var(--g),
+    0 0 45px var(--cyan);
   transform: translate(-50%, -50%);
-  pointer-events: none;
   left: 50%;
-  top: 0;
-  z-index: 12;
-  will-change: transform, left, top;
+  top: 0%;
+  transition: top 0.1s ease-out;
+  z-index: 3;
+  will-change: top;
 }
 
 /* Content layout wrapper */
@@ -1655,39 +1667,40 @@ body.gate-active {
   z-index: 5;
   display: flex;
   flex-direction: column;
-  gap: 180px;
+  gap: 160px;
 }
 
 /* Layout Row */
 .timeline-row {
   display: grid;
-  grid-template-columns: 1fr 120px 1fr;
+  grid-template-columns: 120px 1fr;
   align-items: center;
   position: relative;
 }
 
 /* Card wrappers */
 .timeline-card-wrapper {
-  background: rgba(8, 14, 8, 0.65);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  grid-column: 2;
+  background: rgba(8, 15, 8, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(57, 255, 20, 0.12);
   border-radius: 20px;
-  padding: 14px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(57, 255, 20, 0.03);
+  padding: 16px;
+  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.55), 0 0 35px rgba(57, 255, 20, 0.02);
   transition: border-color 0.4s var(--ease), box-shadow 0.4s var(--ease), transform 0.4s var(--ease), opacity 0.6s var(--ease);
   opacity: 0.15;
-  transform: translateY(40px);
+  transform: translateY(35px);
 }
 .timeline-card-wrapper.active {
   opacity: 1;
   transform: translateY(0);
   border-color: rgba(57, 255, 20, 0.35);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6), 0 0 40px rgba(57, 255, 20, 0.08);
+  box-shadow: 0 18px 54px rgba(0, 0, 0, 0.7), 0 0 42px rgba(57, 255, 20, 0.08);
 }
 .timeline-card-wrapper:hover {
   border-color: rgba(57, 255, 20, 0.6);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.65), 0 0 50px rgba(57, 255, 20, 0.15);
+  box-shadow: 0 22px 66px rgba(0, 0, 0, 0.75), 0 0 48px rgba(57, 255, 20, 0.16);
   transform: translateY(-4px);
 }
 
@@ -1738,68 +1751,38 @@ body.gate-active {
 
 /* Path Anchors & Connector Lines */
 .timeline-dot-anchor {
-  grid-column: 2;
+  grid-column: 1;
   justify-self: center;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  background: #030603;
+  background: #020502;
   border: 3px solid rgba(57, 255, 20, 0.25);
-  box-shadow: 0 0 10px rgba(57, 255, 20, 0.1);
-  z-index: 11;
-  transition: border-color 0.4s var(--ease), background 0.4s var(--ease), box-shadow 0.4s var(--ease);
+  box-shadow: 0 0 10px rgba(57, 255, 20, 0.12);
+  z-index: 10;
+  transition: border-color 0.4s var(--ease), background-color 0.4s var(--ease), box-shadow 0.4s var(--ease);
 }
 .timeline-row.node-active .timeline-dot-anchor {
   border-color: var(--g);
   background: #ffffff;
-  box-shadow: 0 0 15px var(--g), 0 0 5px #ffffff;
+  box-shadow: 0 0 16px var(--g), 0 0 5px #ffffff;
 }
 
 .timeline-connector {
   position: absolute;
   top: 50%;
+  left: 60px;
+  width: 0;
   height: 2px;
-  background: linear-gradient(to right, transparent, rgba(57, 255, 20, 0.2), transparent);
-  width: 0%;
-  z-index: 4;
+  background: linear-gradient(to right, var(--g), rgba(0, 245, 212, 0.4), transparent);
   transform: translateY(-50%);
-  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s;
-}
-
-/* Connector Positions on grid */
-.connector-left {
-  right: 50%;
-  left: auto;
-  border-top: 1.5px dashed rgba(57, 255, 20, 0.15);
-  background: none !important;
-  height: 1px;
-}
-.connector-right {
-  left: 50%;
-  right: auto;
-  border-top: 1.5px dashed rgba(57, 255, 20, 0.15);
-  background: none !important;
-  height: 1px;
+  z-index: 4;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
 }
 .timeline-row.node-active .timeline-connector {
-  border-top-style: solid;
-  border-top-color: var(--g);
-  filter: drop-shadow(0 0 3px rgba(57, 255, 20, 0.5));
-}
-
-/* Grid Alignments */
-.row-left .timeline-card-wrapper {
-  grid-column: 1;
-}
-.row-right .timeline-card-wrapper {
-  grid-column: 3;
-}
-
-.row-left .connector-left {
-  width: calc(50% - 60px);
-}
-.row-right .connector-right {
-  width: calc(50% - 60px);
+  width: 60px;
+  box-shadow: 0 0 8px rgba(57, 255, 20, 0.4);
 }
 
 /* Responsive Overrides (Screen width <= 900px) */
@@ -1807,41 +1790,37 @@ body.gate-active {
   #features-timeline-section {
     padding: 80px 0;
   }
-  .timeline-path-container {
-    left: 28px;
-    transform: none;
+  .matrix-rail-container {
     width: 60px;
   }
-  .timeline-base-path,
-  .timeline-active-path {
-    /* Straighten the curve path on mobile for clean left timeline alignment */
-    d: path("M30,0 L30,1200") !important;
+  .matrix-rail-track {
+    width: 32px;
+    border-left-width: 1.5px;
+    border-right-width: 1.5px;
   }
-  .timeline-glow-dot {
-    left: 30px;
+  .rail-glow-dot {
+    width: 12px;
+    height: 12px;
   }
   .timeline-row {
-    grid-template-columns: 60px 1fr !important;
+    grid-template-columns: 60px 1fr;
     gap: 0;
-    align-items: flex-start;
   }
   .timeline-dot-anchor {
-    grid-column: 1 !important;
-    margin-top: 32px;
+    width: 16px;
+    height: 16px;
   }
   .timeline-connector {
-    display: none !important; /* hide indicator lines on mobile */
+    left: 30px;
+  }
+  .timeline-row.node-active .timeline-connector {
+    width: 30px;
   }
   .timeline-card-wrapper {
-    grid-column: 2 !important;
-    margin-left: 10px;
+    margin-left: 0;
     margin-right: 0;
   }
-  .row-left .timeline-card-wrapper,
-  .row-right .timeline-card-wrapper {
-    grid-column: 2 !important;
-  }
   .timeline-card-wrapper section {
-    padding: 36px 20px !important; /* Added mobile padding for spacing */
+    padding: 36px 20px !important;
   }
 }
