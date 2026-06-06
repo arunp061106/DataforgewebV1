@@ -295,8 +295,6 @@ document.querySelectorAll('.cta-primary').forEach(btn => {
 
 // ── Scroll-Linked Animations & Graphics ───────────────────────
 (function() {
-  const telemetryFill = document.querySelector('.scroll-progress-fill');
-  const telemetryText = document.querySelector('.scroll-progress-text');
   const gridScanner   = document.querySelector('.scroll-grid-scanner');
   const ball1         = document.querySelector('.ball-1');
   const ball2         = document.querySelector('.ball-2');
@@ -308,16 +306,11 @@ document.querySelectorAll('.cta-primary').forEach(btn => {
     if (scrollHeight <= 0) return;
 
     const scrollPercent = scrollTop / scrollHeight;
-    const scrollPctRounded = Math.min(100, Math.max(0, Math.round(scrollPercent * 100)));
 
-    // 1. Update Telemetry Progress Bar Fill & Text
-    if (telemetryFill) telemetryFill.style.height = `${scrollPctRounded}%`;
-    if (telemetryText) telemetryText.textContent = `${scrollPctRounded}%`;
-
-    // 2. Update Grid Scanner Line Position
+    // 1. Update Grid Scanner Line Position
     if (gridScanner) gridScanner.style.top = `${scrollPercent * 100}%`;
 
-    // 3. Update Ambient Glow Parallax Positions
+    // 2. Update Ambient Glow Parallax Positions
     if (ball1) ball1.style.transform = `translate(${scrollPercent * 120}px, ${scrollPercent * -90}px) scale(${1 + scrollPercent * 0.25})`;
     if (ball2) ball2.style.transform = `translate(${scrollPercent * -140}px, ${scrollPercent * 110}px) scale(${1 - scrollPercent * 0.15})`;
     if (ball3) ball3.style.transform = `translate(${scrollPercent * 80}px, ${scrollPercent * 140}px) scale(${1 + scrollPercent * 0.3})`;
