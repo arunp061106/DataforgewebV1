@@ -202,12 +202,6 @@ document.querySelectorAll('.obj-bento .bento-card').forEach((el, i) => {
 document.querySelectorAll('.act-grid .act-card').forEach((el, i) => {
   el.dataset.delay = (i * 0.08).toFixed(2);
 });
-document.querySelectorAll('.speakers-grid .speaker-card').forEach((el, i) => {
-  el.dataset.delay = (i * 0.08).toFixed(2);
-});
-document.querySelectorAll('.glimpse-grid .glimpse-item').forEach((el, i) => {
-  el.dataset.delay = (i * 0.06).toFixed(2);
-});
 
 revealEls.forEach(el => revealObs.observe(el));
 
@@ -271,7 +265,7 @@ document.querySelectorAll('.dcard, .bento-card').forEach(card => {
 });
 
 // ── Particle burst on CTA click ───────────────
-document.querySelectorAll('.cta-primary, .cta-ghost').forEach(btn => {
+document.querySelectorAll('.cta-primary').forEach(btn => {
   btn.addEventListener('click', function(e) {
     for (let i = 0; i < 14; i++) {
       const p = document.createElement('span');
@@ -299,113 +293,38 @@ document.querySelectorAll('.cta-primary, .cta-ghost').forEach(btn => {
   });
 });
 
-// ── Web Audio Synthesizer (Innovation: Synth audio feedbacks) ──
-const AudioFX = {
-  ctx: null,
-  init() {
-    if (this.ctx) return;
-    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-  },
-  playClick() {
-    this.init();
-    if (!this.ctx) return;
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    osc.connect(gain);
-    gain.connect(this.ctx.destination);
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(900, this.ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(200, this.ctx.currentTime + 0.12);
-    gain.gain.setValueAtTime(0.06, this.ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.12);
-    osc.start();
-    osc.stop(this.ctx.currentTime + 0.12);
-  },
-  playHover() {
-    this.init();
-    if (!this.ctx) return;
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    osc.connect(gain);
-    gain.connect(this.ctx.destination);
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(1400, this.ctx.currentTime);
-    gain.gain.setValueAtTime(0.006, this.ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.03);
-    osc.start();
-    osc.stop(this.ctx.currentTime + 0.03);
-  }
-};
-
-// Bind Web Audio UI triggers
-document.querySelectorAll('.cta-primary, .cta-ghost, .nav-menu a, .dcard, .bento-card, .act-card, .speaker-card, .glimpse-item').forEach(el => {
-  el.addEventListener('mouseenter', () => AudioFX.playHover(), { passive: true });
-  el.addEventListener('click', () => AudioFX.playClick(), { passive: true });
-});
-
-// ── Sci-Fi HUD Live Telemetry Ticking (Innovation) ──
+// ── Scroll-Linked Animations & Graphics ───────────────────────
 (function() {
-  const hudProcessed = document.getElementById('hudProcessed');
-  const hudRecruits = document.getElementById('hudRecruits');
-  const hudAccuracy = document.getElementById('hudAccuracy');
-  if (!hudProcessed || !hudRecruits || !hudAccuracy) return;
+  const telemetryFill = document.querySelector('.scroll-progress-fill');
+  const telemetryText = document.querySelector('.scroll-progress-text');
+  const gridScanner   = document.querySelector('.scroll-grid-scanner');
+  const ball1         = document.querySelector('.ball-1');
+  const ball2         = document.querySelector('.ball-2');
+  const ball3         = document.querySelector('.ball-3');
 
-  let baseProcessed = 4281912;
-  let baseRecruits = 142;
-  let baseAccuracy = 98.84;
+  function handleScroll() {
+    const scrollTop     = window.scrollY || document.documentElement.scrollTop;
+    const scrollHeight  = document.documentElement.scrollHeight - window.innerHeight;
+    if (scrollHeight <= 0) return;
 
-  setInterval(() => {
-    // Tick datasets processed
-    baseProcessed += Math.floor(Math.random() * 8);
-    hudProcessed.textContent = baseProcessed.toLocaleString();
+    const scrollPercent = scrollTop / scrollHeight;
+    const scrollPctRounded = Math.min(100, Math.max(0, Math.round(scrollPercent * 100)));
 
-    // Occasional recruits tick
-    if (Math.random() > 0.97) {
-      baseRecruits += 1;
-      hudRecruits.textContent = baseRecruits;
-      // UI feedback pulse
-      hudRecruits.style.color = 'var(--cyan)';
-      setTimeout(() => hudRecruits.style.color = 'var(--g)', 300);
-    }
+    // 1. Update Telemetry Progress Bar Fill & Text
+    if (telemetryFill) telemetryFill.style.height = `${scrollPctRounded}%`;
+    if (telemetryText) telemetryText.textContent = `${scrollPctRounded}%`;
 
-    // Accuracy micro-jitter
-    if (Math.random() > 0.8) {
-      const jitter = (Math.random() * 0.04 - 0.02);
-      const cur = Math.min(99.99, Math.max(98.00, baseAccuracy + jitter));
-      hudAccuracy.textContent = cur.toFixed(2) + '%';
-    }
-  }, 400);
-})();
+    // 2. Update Grid Scanner Line Position
+    if (gridScanner) gridScanner.style.top = `${scrollPercent * 100}%`;
 
-// ── Srijan-style Countdown Timer ───────────────
-(function() {
-  const targetDate = new Date('2026-06-20T00:00:00').getTime();
-
-  function updateCountdown() {
-    const now = new Date().getTime();
-    const diff = targetDate - now;
-
-    if (diff <= 0) {
-      document.querySelectorAll('.countdown-num').forEach(el => el.textContent = '00');
-      return;
-    }
-
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const secs = Math.floor((diff % (1000 * 60)) / 1000);
-
-    const dEl = document.getElementById('cd-days');
-    const hEl = document.getElementById('cd-hours');
-    const mEl = document.getElementById('cd-mins');
-    const sEl = document.getElementById('cd-secs');
-
-    if (dEl) dEl.textContent = String(days).padStart(2, '0');
-    if (hEl) hEl.textContent = String(hours).padStart(2, '0');
-    if (mEl) mEl.textContent = String(mins).padStart(2, '0');
-    if (sEl) sEl.textContent = String(secs).padStart(2, '0');
+    // 3. Update Ambient Glow Parallax Positions
+    if (ball1) ball1.style.transform = `translate(${scrollPercent * 120}px, ${scrollPercent * -90}px) scale(${1 + scrollPercent * 0.25})`;
+    if (ball2) ball2.style.transform = `translate(${scrollPercent * -140}px, ${scrollPercent * 110}px) scale(${1 - scrollPercent * 0.15})`;
+    if (ball3) ball3.style.transform = `translate(${scrollPercent * 80}px, ${scrollPercent * 140}px) scale(${1 + scrollPercent * 0.3})`;
   }
 
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
+  // Bind passive listener for optimal scrolling FPS
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  // Call once initially to coordinate load state
+  handleScroll();
 })();
