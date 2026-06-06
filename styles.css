@@ -213,11 +213,12 @@ body:has(a:hover) .cursor-trail { width: 48px; height: 48px; border-color: rgba(
   min-height: 100vh;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   position: relative;
   overflow: hidden;
   z-index: 2;
   padding-bottom: 110px;
+  padding-left: max(5vw, 56px);
 }
 
 /* Hex mesh */
@@ -319,10 +320,11 @@ body:has(a:hover) .cursor-trail { width: 48px; height: 48px; border-color: rgba(
 
 /* Hero center content */
 .hero-center {
-  text-align: center;
+  text-align: left;
   position: relative;
   z-index: 5;
   animation: heroIn 1s var(--ease) both;
+  max-width: 680px;
 }
 @keyframes heroIn {
   from { opacity: 0; transform: translateY(40px); }
@@ -330,17 +332,21 @@ body:has(a:hover) .cursor-trail { width: 48px; height: 48px; border-color: rgba(
 }
 
 .hero-pre {
-  font-family: var(--ff-mono);
-  font-size: clamp(.68rem, 1.5vw, .82rem);
+  font-family: var(--ff-body);
+  font-size: clamp(.82rem, 1.4vw, .95rem);
   color: var(--body-text);
-  letter-spacing: .22em;
-  text-transform: uppercase;
+  letter-spacing: .05em;
   margin-bottom: 24px;
   font-weight: 500;
+  display: inline-block;
+  padding: 6px 14px;
+  background: rgba(57,255,20,.04);
+  border: 1px solid rgba(57,255,20,.1);
+  border-radius: 6px;
 }
 
 .hero-logo-wrap {
-  display: inline-block;
+  display: block;
   margin-bottom: 16px;
   filter: drop-shadow(0 0 20px var(--g-glow));
 }
@@ -360,7 +366,7 @@ body:has(a:hover) .cursor-trail { width: 48px; height: 48px; border-color: rgba(
   margin-bottom: 24px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 4px;
 }
 .h1-outline {
@@ -387,7 +393,8 @@ body:has(a:hover) .cursor-trail { width: 48px; height: 48px; border-color: rgba(
   padding: 10px 20px;
   border-radius: 6px;
   margin-bottom: 54px;
-  min-width: 340px;
+  min-width: 300px;
+  max-width: 100%;
   justify-content: flex-start;
 }
 .terminal-prompt { color: var(--cyan); flex-shrink: 0; }
@@ -398,7 +405,7 @@ body:has(a:hover) .cursor-trail { width: 48px; height: 48px; border-color: rgba(
 .hero-ctas {
   display: flex;
   gap: 16px;
-  justify-content: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
   margin-bottom: 40px;
 }
@@ -1337,13 +1344,13 @@ body.gate-active {
   .nav-hamburger { display: flex; }
 
   /* Hero */
-  #hero { padding: 0 16px; min-height: 100svh; }
-  .hero-center { padding: 84px 0 60px; }
-  .hero-pre { font-size: .56rem; letter-spacing: .12em; padding: 0 8px; }
+  #hero { padding: 0 20px 0 20px; min-height: 100svh; }
+  .hero-center { padding: 84px 0 60px; max-width: 100%; }
+  .hero-pre { font-size: .78rem; }
   .hero-logo-wrap img { width: clamp(90px, 22vw, 130px); }
   .hero-h1 { font-size: clamp(3.2rem, 17vw, 5rem); letter-spacing: -.03em; }
-  .hero-terminal { min-width: unset; width: 94%; font-size: .72rem; padding: 9px 14px; }
-  .hero-ctas { flex-direction: column; align-items: center; gap: 12px; }
+  .hero-terminal { min-width: unset; width: 100%; font-size: .72rem; padding: 9px 14px; }
+  .hero-ctas { flex-direction: column; align-items: flex-start; gap: 12px; }
   .cta-primary, .cta-ghost { width: 100%; max-width: 300px; justify-content: center; }
 
   /* Corner badges */
