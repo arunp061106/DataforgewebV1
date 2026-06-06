@@ -757,7 +757,7 @@ body.gate-active { overflow: hidden; }
 #features-timeline-section {
   position: relative;
   width: 100%;
-  background: linear-gradient(to bottom, #040804 0%, #060d06 30%, #081208 60%, #040804 100%);
+  background: transparent;
   padding: var(--section-pad) 0;
   z-index: 2;
   overflow: hidden;
