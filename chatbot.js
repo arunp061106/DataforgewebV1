@@ -852,16 +852,19 @@ function injectChatStyles() {
       padding: 10px 18px 10px 10px;
       border-radius: 50px;
       border: 1.5px solid rgba(57,255,20,.35);
-      background: linear-gradient(135deg, #0a1f0a 0%, #0f2d0f 60%, #1a3a1a 100%);
+      background: linear-gradient(135deg, rgba(10, 31, 10, 0.85) 0%, rgba(15, 45, 15, 0.85) 60%, rgba(26, 58, 26, 0.85) 100%);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       box-shadow: 0 8px 32px rgba(0,0,0,.7), inset 0 1px 0 rgba(57,255,20,.08);
       cursor: pointer;
       position: relative;
       overflow: hidden;
-      transition: box-shadow .3s, border-color .3s;
+      transition: box-shadow .3s, border-color .3s, transform .3s;
     }
     #forge-launcher:hover {
       border-color: rgba(57,255,20,.6);
       box-shadow: 0 0 0 3px rgba(57,255,20,.1), 0 8px 36px rgba(57,255,20,.18), 0 12px 40px rgba(0,0,0,.6);
+      transform: translateY(-2px);
     }
     #forge-launcher.forge-launcher-active {
       border-color: #39ff14;
@@ -946,13 +949,15 @@ function injectChatStyles() {
       width: 390px;
       height: min(620px, calc(100vh - 120px));
       max-height: calc(100vh - 120px);
-      background: #060e06;
-      border: 1px solid rgba(57,255,20,.2);
+      background: rgba(6, 14, 6, 0.82);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1.5px solid rgba(57,255,20,.25);
       border-radius: 20px;
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      box-shadow: 0 32px 80px rgba(0,0,0,.8), 0 0 0 1px rgba(57,255,20,.15);
+      box-shadow: 0 32px 80px rgba(0,0,0,.85), 0 0 30px rgba(57,255,20,.15);
       transform-origin: bottom right;
       transition: transform .35s cubic-bezier(.34,1.56,.64,1), opacity .25s;
     }
@@ -972,8 +977,8 @@ function injectChatStyles() {
       align-items: center;
       justify-content: space-between;
       padding: 14px 16px;
-      background: linear-gradient(135deg, #0a1f0a, #0f2a0f);
-      border-bottom: 1px solid rgba(57,255,20,.15);
+      background: linear-gradient(135deg, rgba(10, 31, 10, 0.9), rgba(15, 42, 15, 0.9));
+      border-bottom: 1px solid rgba(57,255,20,.2);
       flex-shrink: 0;
     }
     .forge-header-left { display: flex; align-items: center; gap: 12px; }
@@ -1005,7 +1010,7 @@ function injectChatStyles() {
     }
     .forge-header-info span {
       font-size: .68rem;
-      color: #5e8a5e;
+      color: #7eab7e;
     }
     .forge-header-info em { color: #39ff14; font-style: normal; }
     .forge-header-right { display: flex; align-items: center; gap: 8px; }
@@ -1029,15 +1034,15 @@ function injectChatStyles() {
       align-items: center;
       gap: 10px;
       padding: 8px 16px;
-      background: rgba(10,20,10,.8);
-      border-bottom: 1px solid rgba(57,255,20,.08);
+      background: rgba(6, 14, 6, 0.6);
+      border-bottom: 1px solid rgba(57,255,20,.1);
       flex-shrink: 0;
     }
     .hud-left, .hud-right { display: flex; align-items: center; gap: 5px; }
     .hud-label {
       font-family: 'Orbitron', sans-serif;
       font-size: .55rem;
-      color: #5e8a5e;
+      color: #7eab7e;
       letter-spacing: .1em;
     }
     .hud-val {
@@ -1050,16 +1055,16 @@ function injectChatStyles() {
     .hud-center { flex: 1; }
     .forge-xp-bar {
       height: 5px;
-      background: rgba(57,255,20,.1);
+      background: rgba(57,255,20,.12);
       border-radius: 10px;
       overflow: hidden;
     }
     .forge-xp-fill {
       height: 100%;
-      background: linear-gradient(90deg, #2bcc0f, #39ff14);
+      background: linear-gradient(90deg, var(--cyan), var(--g));
       border-radius: 10px;
       transition: width .6s cubic-bezier(.4,0,.2,1);
-      box-shadow: 0 0 8px #39ff14;
+      box-shadow: 0 0 8px var(--g);
     }
 
     /* ── Messages ── */
@@ -1107,15 +1112,15 @@ function injectChatStyles() {
       to { transform: scale(1) translateY(0); opacity: 1; }
     }
     .forge-msg-bot .forge-bubble {
-      background: rgba(14,25,14,.9);
+      background: rgba(14,25,14,.85);
       border: 1px solid rgba(57,255,20,.15);
-      color: #a8c8a8;
+      color: #c8dfc8;
       border-bottom-left-radius: 4px;
     }
     .forge-msg-user .forge-bubble {
-      background: linear-gradient(135deg, #1a3a1a, #0f2a0f);
+      background: linear-gradient(135deg, rgba(57, 255, 20, 0.18), rgba(0, 245, 212, 0.1));
       border: 1px solid rgba(57,255,20,.3);
-      color: #f0fff0;
+      color: #ffffff;
       border-bottom-right-radius: 4px;
     }
     .forge-bubble strong { color: #39ff14; }
@@ -1250,7 +1255,7 @@ function injectChatStyles() {
       top: 120px;
       left: 50%;
       transform: translateX(-50%);
-      background: linear-gradient(135deg, #0f2a0f, #1a3a1a);
+      background: linear-gradient(135deg, rgba(15, 42, 15, 0.9), rgba(26, 58, 26, 0.9));
       border: 1px solid #39ff14;
       border-radius: 10px;
       padding: 8px 18px;
@@ -1268,14 +1273,14 @@ function injectChatStyles() {
       font-weight: 700;
       text-shadow: 0 0 10px rgba(57,255,20,.5);
     }
-    .forge-xp-toast small { font-size: .65rem; color: #5e8a5e; }
+    .forge-xp-toast small { font-size: .65rem; color: #7eab7e; }
 
     .forge-levelup-toast, .forge-badge-notif {
       position: absolute;
       top: 70px;
       left: 50%;
       transform: translateX(-50%);
-      background: linear-gradient(135deg, #0a1f0a, #1a3a1a);
+      background: linear-gradient(135deg, rgba(10, 31, 10, 0.95), rgba(26, 58, 26, 0.95));
       border: 1.5px solid #39ff14;
       border-radius: 14px;
       padding: 12px 20px;
@@ -1320,7 +1325,9 @@ function injectChatStyles() {
     #forge-badges-panel {
       position: absolute;
       inset: 0;
-      background: #060e06;
+      background: rgba(6, 14, 6, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       z-index: 50;
       border-radius: 20px;
       display: flex;
@@ -1343,7 +1350,7 @@ function injectChatStyles() {
     #forge-badges-close {
       background: none;
       border: none;
-      color: #5e8a5e;
+      color: #7eab7e;
       cursor: pointer;
       font-size: 1rem;
     }
@@ -1376,7 +1383,7 @@ function injectChatStyles() {
     }
     .badge-icon { font-size: 1.8rem; flex-shrink: 0; }
     .badge-info strong { display: block; font-size: .78rem; color: #f0fff0; margin-bottom: 2px; }
-    .badge-info small { font-size: .68rem; color: #5e8a5e; }
+    .badge-info small { font-size: .68rem; color: #7eab7e; }
     .badge-xp {
       display: inline-block;
       margin-top: 4px;
@@ -1390,8 +1397,8 @@ function injectChatStyles() {
 
     /* ── Input Area ── */
     #forge-input-area {
-      border-top: 1px solid rgba(57,255,20,.1);
-      background: #050d05;
+      border-top: 1px solid rgba(57,255,20,.12);
+      background: rgba(5, 13, 5, 0.9);
       padding: 10px 14px 12px;
       flex-shrink: 0;
     }
@@ -1447,7 +1454,7 @@ function injectChatStyles() {
     #forge-send-btn {
       width: 40px; height: 40px;
       border-radius: 10px;
-      background: #39ff14;
+      background: linear-gradient(135deg, #39ff14, #00f5d4);
       border: none;
       color: #030803;
       cursor: pointer;
@@ -1459,7 +1466,7 @@ function injectChatStyles() {
     }
     #forge-send-btn:hover {
       transform: scale(1.12);
-      box-shadow: 0 0 16px rgba(57,255,20,.5);
+      box-shadow: 0 0 16px rgba(57, 255, 20, 0.4);
     }
     #forge-footer-brand {
       text-align: center;
