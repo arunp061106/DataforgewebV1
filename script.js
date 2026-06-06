@@ -296,59 +296,73 @@ document.querySelectorAll('.cta-primary').forEach(btn => {
   const ball2          = document.querySelector('.ball-2');
   const ball3          = document.querySelector('.ball-3');
   const timelineSec    = document.getElementById('features-timeline-section');
-  const activeLine     = document.getElementById('activeRailLine');
+  const bgPath         = document.getElementById('timelineTrackBg');
+  const activePath     = document.getElementById('timelineTrackActive');
   const railGlowDot    = document.getElementById('railGlowDot');
   const timelineRows   = document.querySelectorAll('.timeline-row');
+  const dot1           = document.querySelector('#node-vision .timeline-dot-anchor');
+  const dot2           = document.querySelector('#node-domains .timeline-dot-anchor');
+  const dot3           = document.querySelector('#node-activities .timeline-dot-anchor');
 
-  /* ── Rail Canvas Matrix Rain ────────────── */
-  const railCanvas = document.getElementById('railCanvas');
-  let railCtx, rW = 0, rH = 0, railCols = [];
-  const RAIL_CHARS = '010101DATAFORGEANALYTICSMLΨΩΔΛ';
-  let railAnimId   = null;
+  /* ── Winding Path Generator ─────────────── */
+  function updateTimelinePath() {
+    if (!timelineSec || !bgPath || !activePath || !dot1 || !dot2 || !dot3) return;
 
-  function initRailMatrix() {
-    if (!railCanvas) return;
-    if (!railCtx) railCtx = railCanvas.getContext('2d');
-    const track = railCanvas.parentElement;
-    if (!track) return;
-    const nW = track.clientWidth;
-    const nH = track.clientHeight;
-    if (nW === rW && nH === rH && railCols.length > 0) return;
-    rW = railCanvas.width  = nW;
-    rH = railCanvas.height = nH;
-    const count = Math.floor(rW / 8) + 1;
-    railCols = [];
-    for (let i = 0; i < count; i++) {
-      railCols.push({
-        x:       i * 8,
-        y:       Math.random() * rH,
-        speed:   1.2 + Math.random() * 2.8,
-        fontSize:7 + Math.random() * 5,
-        opacity: 0.15 + Math.random() * 0.45,
-      });
+    const containerRect = timelineSec.getBoundingClientRect();
+    const w = containerRect.width;
+    const h = containerRect.height;
+
+    // Helper to get center coordinates of a dot relative to timeline section
+    function getDotCenter(dot) {
+      const rect = dot.getBoundingClientRect();
+      return {
+        x: rect.left - containerRect.left + rect.width / 2,
+        y: rect.top - containerRect.top + rect.height / 2
+      };
     }
+
+    const p1 = getDotCenter(dot1);
+    const p2 = getDotCenter(dot2);
+    const p3 = getDotCenter(dot3);
+
+    // Start at top center
+    const xStart = w / 2;
+    const yStart = 0;
+    const yEnd   = h;
+
+    // Helper for s-curve path calculation
+    function sCurve(xA, yA, xB, yB) {
+      const dy = yB - yA;
+      const cp1y = yA + dy * 0.45;
+      const cp2y = yB - dy * 0.45;
+      return `C ${xA} ${cp1y}, ${xB} ${cp2y}, ${xB} ${yB}`;
+    }
+
+    // Generate path
+    const pathStart = `M ${xStart} ${yStart}`;
+    const curve1    = sCurve(xStart, yStart, p1.x, p1.y);
+    const curve2    = sCurve(p1.x, p1.y, p2.x, p2.y);
+    const curve3    = sCurve(p2.x, p2.y, p3.x, p3.y);
+
+    // Dynamic loop at bottom scaled to width
+    const hDiff = yEnd - p3.y;
+    const loopWidth = Math.min(100, w * 0.25);
+    const loop = `
+      C ${p3.x} ${p3.y + hDiff * 0.2}, ${xStart - loopWidth} ${p3.y + hDiff * 0.15}, ${xStart - loopWidth} ${p3.y + hDiff * 0.4}
+      C ${xStart - loopWidth} ${p3.y + hDiff * 0.65}, ${xStart + loopWidth} ${p3.y + hDiff * 0.55}, ${xStart + loopWidth} ${p3.y + hDiff * 0.75}
+      C ${xStart + loopWidth} ${p3.y + hDiff * 0.9}, ${xStart} ${p3.y + hDiff * 0.9}, ${xStart} ${yEnd}
+    `;
+
+    const d = `${pathStart} ${curve1} ${curve2} ${curve3} ${loop}`;
+    bgPath.setAttribute('d', d);
+    activePath.setAttribute('d', d);
+
+    // Update active path dash offset bounds
+    const pathLength = activePath.getTotalLength();
+    activePath.style.strokeDasharray = pathLength;
   }
 
-  function drawRailMatrix() {
-    if (!railCanvas || !railCtx) return;
-    railCtx.fillStyle = 'rgba(4,9,4,0.18)';
-    railCtx.fillRect(0, 0, rW, rH);
-    for (const col of railCols) {
-      railCtx.font      = `bold ${col.fontSize}px 'Space Mono', monospace`;
-      railCtx.fillStyle = Math.random() > 0.85
-        ? `rgba(0,245,212,${col.opacity})`
-        : `rgba(57,255,20,${col.opacity})`;
-      railCtx.fillText(
-        RAIL_CHARS[Math.floor(Math.random() * RAIL_CHARS.length)],
-        col.x, col.y
-      );
-      col.y += col.speed;
-      if (col.y > rH) { col.y = -20; col.speed = 1.2 + Math.random() * 2.8; }
-    }
-    railAnimId = requestAnimationFrame(drawRailMatrix);
-  }
-
-  window.addEventListener('resize', initRailMatrix, { passive: true });
+  window.addEventListener('resize', updateTimelinePath, { passive: true });
 
   /* ── Scroll handler ─────────────────────── */
   function onScroll() {
@@ -365,8 +379,8 @@ document.querySelectorAll('.cta-primary').forEach(btn => {
     if (ball2) ball2.style.transform = `translate(${pct*-140}px,${pct*110}px) scale(${1-pct*.15})`;
     if (ball3) ball3.style.transform = `translate(${pct*80}px,${pct*140}px) scale(${1+pct*.3})`;
 
-    // 3. Rail progress line + glow dot
-    if (timelineSec && activeLine && railGlowDot) {
+    // 3. Winding rail progress line + glow dot
+    if (timelineSec && activePath && railGlowDot) {
       const secTop    = timelineSec.offsetTop;
       const secHeight = timelineSec.offsetHeight;
       const vh        = window.innerHeight;
@@ -381,8 +395,14 @@ document.querySelectorAll('.cta-primary').forEach(btn => {
       }
       progress = Math.min(1, Math.max(0, progress));
 
-      activeLine.style.height = `${progress * 100}%`;
-      railGlowDot.style.top   = `${progress * 100}%`;
+      const pathLength = activePath.getTotalLength();
+      activePath.style.strokeDashoffset = pathLength * (1 - progress);
+
+      if (pathLength > 0) {
+        const point = activePath.getPointAtLength(progress * pathLength);
+        railGlowDot.style.left = `${point.x}px`;
+        railGlowDot.style.top  = `${point.y}px`;
+      }
     }
 
     // 4. Activate timeline rows + connector lines
@@ -405,13 +425,12 @@ document.querySelectorAll('.cta-primary').forEach(btn => {
 
   /* ── Init ───────────────────────────────── */
   setTimeout(() => {
-    initRailMatrix();
-    drawRailMatrix();
+    updateTimelinePath();
     onScroll();
   }, 150);
 
-  // Re-check layout after images load
-  setTimeout(initRailMatrix, 700);
-  setTimeout(initRailMatrix, 1800);
+  // Re-check layout after images/styles load
+  setTimeout(updateTimelinePath, 700);
+  setTimeout(updateTimelinePath, 1800);
 
 })();

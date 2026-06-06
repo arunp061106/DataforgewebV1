@@ -224,13 +224,22 @@
     <div class="timeline-bg-glow glow-1" aria-hidden="true"></div>
     <div class="timeline-bg-glow glow-2" aria-hidden="true"></div>
 
-    <!-- Matrix Rail (left vertical track) -->
-    <div class="matrix-rail-container" aria-hidden="true">
-      <div class="matrix-rail-track">
-        <canvas id="railCanvas"></canvas>
-        <div class="active-rail-line" id="activeRailLine"></div>
-        <div class="rail-glow-dot"    id="railGlowDot"></div>
-      </div>
+    <!-- Winding SVG Timeline Rail -->
+    <div class="timeline-svg-container" aria-hidden="true">
+      <svg id="timelineSvg">
+        <defs>
+          <linearGradient id="timelineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="var(--g)" />
+            <stop offset="100%" stop-color="var(--cyan)" />
+          </linearGradient>
+        </defs>
+        <!-- Background path (dim green/cyan) -->
+        <path id="timelineTrackBg" fill="none" />
+        <!-- Active path (bright animated glow) -->
+        <path id="timelineTrackActive" fill="none" />
+      </svg>
+      <!-- Glowing active dot following the curve -->
+      <div class="rail-glow-dot" id="railGlowDot"></div>
     </div>
 
     <!-- Content wrapper -->
