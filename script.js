@@ -244,17 +244,10 @@ if (scrollWrap) {
 
 
 // ══════════════════════════════════════════════
-// 8. CARD TILT EFFECT (bento + domain cards)
+// 8. CARD TILT EFFECT — Handled in scroll-effects.js
 // ══════════════════════════════════════════════
-document.querySelectorAll('.dcard, .bento-card').forEach(card => {
-  card.addEventListener('mousemove', e => {
-    const r = card.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width  - 0.5;
-    const y = (e.clientY - r.top)  / r.height - 0.5;
-    card.style.transform = `translateY(-6px) rotateX(${-y * 6}deg) rotateY(${x * 6}deg)`;
-  });
-  card.addEventListener('mouseleave', () => { card.style.transform = ''; });
-});
+// The premium 3D magnetic card tilt with shadow glow is handled dynamically in scroll-effects.js
+
 
 
 // ══════════════════════════════════════════════

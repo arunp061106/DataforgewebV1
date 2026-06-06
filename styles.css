@@ -1944,3 +1944,32 @@ body.gate-active { overflow: hidden; }
   border-color: #00ff41 !important;
   box-shadow: 0 0 20px rgba(0,255,65,0.15) !important;
 }
+
+/* ─── DOMAINS CAROUSEL CONTROLS ──────────────────── */
+.carousel-nav {
+  display: flex; gap: 12px; margin-bottom: 24px;
+  justify-content: flex-end;
+}
+.carousel-btn {
+  background: rgba(10,20,10,0.8);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--g); cursor: pointer;
+  transition: all 0.3s ease;
+}
+.carousel-btn:hover { background: var(--g); color: #000; box-shadow: 0 0 16px var(--g); }
+.carousel-dots {
+  display: flex; gap: 8px; justify-content: center; margin-top: 24px;
+}
+.carousel-dots .dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--border-hi); transition: 0.3s;
+}
+.carousel-dots .dot.active {
+  background: var(--g); transform: scale(1.5); box-shadow: 0 0 8px var(--g);
+}
+
+@media (max-width: 768px) {
+  .carousel-nav { display: none; }
+}
