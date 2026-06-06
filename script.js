@@ -202,6 +202,12 @@ document.querySelectorAll('.obj-bento .bento-card').forEach((el, i) => {
 document.querySelectorAll('.act-grid .act-card').forEach((el, i) => {
   el.dataset.delay = (i * 0.08).toFixed(2);
 });
+document.querySelectorAll('.speakers-grid .speaker-card').forEach((el, i) => {
+  el.dataset.delay = (i * 0.08).toFixed(2);
+});
+document.querySelectorAll('.glimpse-grid .glimpse-item').forEach((el, i) => {
+  el.dataset.delay = (i * 0.06).toFixed(2);
+});
 
 revealEls.forEach(el => revealObs.observe(el));
 
@@ -332,7 +338,7 @@ const AudioFX = {
 };
 
 // Bind Web Audio UI triggers
-document.querySelectorAll('.cta-primary, .cta-ghost, .nav-menu a, .dcard, .bento-card, .act-card').forEach(el => {
+document.querySelectorAll('.cta-primary, .cta-ghost, .nav-menu a, .dcard, .bento-card, .act-card, .speaker-card, .glimpse-item').forEach(el => {
   el.addEventListener('mouseenter', () => AudioFX.playHover(), { passive: true });
   el.addEventListener('click', () => AudioFX.playClick(), { passive: true });
 });
@@ -369,4 +375,37 @@ document.querySelectorAll('.cta-primary, .cta-ghost, .nav-menu a, .dcard, .bento
       hudAccuracy.textContent = cur.toFixed(2) + '%';
     }
   }, 400);
+})();
+
+// ── Srijan-style Countdown Timer ───────────────
+(function() {
+  const targetDate = new Date('2026-06-20T00:00:00').getTime();
+
+  function updateCountdown() {
+    const now = new Date().getTime();
+    const diff = targetDate - now;
+
+    if (diff <= 0) {
+      document.querySelectorAll('.countdown-num').forEach(el => el.textContent = '00');
+      return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+    const dEl = document.getElementById('cd-days');
+    const hEl = document.getElementById('cd-hours');
+    const mEl = document.getElementById('cd-mins');
+    const sEl = document.getElementById('cd-secs');
+
+    if (dEl) dEl.textContent = String(days).padStart(2, '0');
+    if (hEl) hEl.textContent = String(hours).padStart(2, '0');
+    if (mEl) mEl.textContent = String(mins).padStart(2, '0');
+    if (sEl) sEl.textContent = String(secs).padStart(2, '0');
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
 })();
