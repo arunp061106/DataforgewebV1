@@ -1343,35 +1343,37 @@ body.gate-active { overflow: hidden; }
   z-index: 101;
 }
 .track-bg {
-  stroke: rgba(57, 255, 20, 0.15);
-  stroke-width: 2;
-  stroke-dasharray: 4 4;
+  stroke: rgba(57, 255, 20, 0.1);
+  stroke-width: 1px;
+  stroke-dasharray: 4 6;
+  vector-effect: non-scaling-stroke;
 }
 #globalActiveTrack {
-  stroke: #00ff41;
-  stroke-width: 3;
-  filter: drop-shadow(0 0 8px rgba(0,255,65,0.6));
+  stroke: #39ff14;
+  stroke-width: 1.5px;
+  filter: drop-shadow(0 0 4px rgba(57,255,20,0.6));
   stroke-dasharray: 1000;
   stroke-dashoffset: 1000;
   transition: stroke-dashoffset 0.1s linear;
+  vector-effect: non-scaling-stroke;
 }
 .timeline-dot {
   position: absolute;
   left: 20px;
   transform: translateX(-50%);
-  width: 12px;
-  height: 12px;
-  background: #020502;
-  border: 2px solid rgba(57, 255, 20, 0.3);
+  width: 8px;
+  height: 8px;
+  background: #040804;
+  border: 1.2px solid rgba(57, 255, 20, 0.25);
   border-radius: 50%;
   z-index: 2;
-  transition: all 0.3s ease;
+  transition: all 0.35s ease;
 }
 .timeline-dot.active {
-  background: #00ff41;
-  border-color: #00ff41;
-  box-shadow: 0 0 12px #00ff41;
-  transform: translateX(-50%) scale(1.2);
+  background: #39ff14;
+  border-color: #39ff14;
+  box-shadow: 0 0 10px #39ff14;
+  transform: translateX(-50%) scale(1.3);
 }
 
 @media (max-width: 900px) {

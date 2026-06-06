@@ -56,13 +56,10 @@ setTimeout(function startStory() {
 
     <!-- Winding SVG train -->
     <svg id="storyTrainSvg" viewBox="0 0 100 100" preserveAspectRatio="none">
-      <path id="storyTrainPath" fill="none" stroke="rgba(57,255,20,0.18)" stroke-width="0.5" stroke-dasharray="3 3"/>
-      <path id="storyTrainActive" fill="none" stroke="#00ff41" stroke-width="1.2"
-            stroke-linecap="round"
-            style="filter:drop-shadow(0 0 6px #00ff41);"/>
-      <circle id="storyTrainDot" r="2" fill="#fff"
-              style="filter:drop-shadow(0 0 8px #00ff41) drop-shadow(0 0 20px #00ff41);"/>
+      <path id="storyTrainPath" fill="none" />
+      <path id="storyTrainActive" fill="none" />
     </svg>
+    <div id="storyTrainDotEl"></div>
 
     <!-- Chapter slides -->
     <div id="storySlides">
@@ -128,6 +125,33 @@ setTimeout(function startStory() {
       width: 100%; height: 100%;
       pointer-events: none;
     }
+    #storyTrainPath {
+      fill: none;
+      stroke: rgba(57,255,20,0.06);
+      stroke-width: 1px;
+      stroke-dasharray: 4 6;
+      vector-effect: non-scaling-stroke;
+    }
+    #storyTrainActive {
+      fill: none;
+      stroke: #39ff14;
+      stroke-width: 1.5px;
+      stroke-linecap: round;
+      filter: drop-shadow(0 0 4px #39ff14);
+      vector-effect: non-scaling-stroke;
+    }
+    #storyTrainDotEl {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: #ffffff;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 15;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 8px #39ff14, 0 0 18px #39ff14;
+      will-change: left, top;
+    }
 
     /* ── Slides ── */
     #storySlides {
@@ -149,26 +173,35 @@ setTimeout(function startStory() {
       gap: 20px;
       padding: 40px;
       opacity: 0;
-      transform: translateY(60px) scale(0.94);
-      transition: none;
+      filter: blur(12px);
+      transform: translateY(40px) scale(0.96);
+      transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1),
+                  filter 0.8s cubic-bezier(0.16,1,0.3,1),
+                  transform 0.8s cubic-bezier(0.16,1,0.3,1);
       pointer-events: none;
     }
     .story-slide.active {
       opacity: 1;
+      filter: blur(0px);
       transform: translateY(0) scale(1);
       pointer-events: auto;
-      transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1),
-                  transform 0.9s cubic-bezier(0.16,1,0.3,1);
+      transition: opacity 1.1s cubic-bezier(0.16,1,0.3,1),
+                  filter 1.1s cubic-bezier(0.16,1,0.3,1),
+                  transform 1.1s cubic-bezier(0.16,1,0.3,1);
     }
     .story-slide.exit-up {
       opacity: 0;
-      transform: translateY(-70px) scale(0.93);
+      filter: blur(8px);
+      transform: translateY(-40px) scale(0.96);
       pointer-events: none;
-      transition: opacity 0.6s ease-in, transform 0.6s ease-in;
+      transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1),
+                  filter 0.7s cubic-bezier(0.16,1,0.3,1),
+                  transform 0.7s cubic-bezier(0.16,1,0.3,1);
     }
     .story-slide.enter-down {
       opacity: 0;
-      transform: translateY(70px) scale(0.94);
+      filter: blur(12px);
+      transform: translateY(40px) scale(0.96);
       transition: none;
     }
 
@@ -351,15 +384,15 @@ setTimeout(function startStory() {
     if (!overlay.parentNode) return;
     sFrame++;
     if (sFrame % 2 === 0) {
-      sCtx.fillStyle = 'rgba(0,0,0,0.06)';
+      sCtx.fillStyle = 'rgba(3, 10, 3, 0.05)';
       sCtx.fillRect(0, 0, sW, sH);
-      sCtx.font = '14px "Space Mono", monospace';
+      sCtx.font = '10px "Space Mono", monospace';
       for (let i = 0; i < sCols; i++) {
         const char = Math.random() > 0.5 ? '1' : '0';
-        sCtx.fillStyle = 'rgba(57,255,20,0.7)';
+        sCtx.fillStyle = 'rgba(57, 255, 20, 0.14)';
         sCtx.fillText(char, i * 18, sYpos[i]);
-        sYpos[i] += 18;
-        if (sYpos[i] > sH && Math.random() > 0.97) sYpos[i] = 0;
+        sYpos[i] += 12;
+        if (sYpos[i] > sH && Math.random() > 0.985) sYpos[i] = 0;
       }
     }
     requestAnimationFrame(drawStoryMatrix);
@@ -368,7 +401,7 @@ setTimeout(function startStory() {
   /* ─── SVG Winding Train ─────────────────────────────────────── */
   const trainPath = document.getElementById('storyTrainPath');
   const trainActive = document.getElementById('storyTrainActive');
-  const trainDot = document.getElementById('storyTrainDot');
+  const trainDot = document.getElementById('storyTrainDotEl');
 
   // S-curve winding path across 100x100 viewbox
   const FULL_PATH = 'M 15 5 C 15 25, 85 25, 85 40 C 85 55, 15 55, 15 70 C 15 82, 50 90, 50 98';
@@ -431,11 +464,8 @@ setTimeout(function startStory() {
       // Move dot along path
       if (totalLen > 0) {
         const pt = trainActive.getPointAtLength(drawn);
-        const svgRect = document.getElementById('storyTrainSvg').getBoundingClientRect();
-        const scaleX = svgRect.width / 100;
-        const scaleY = svgRect.height / 100;
-        trainDot.setAttribute('cx', pt.x);
-        trainDot.setAttribute('cy', pt.y);
+        trainDot.style.left = `${pt.x}%`;
+        trainDot.style.top = `${pt.y}%`;
       }
 
       if (t < 1) {
@@ -567,8 +597,8 @@ setTimeout(function startStory() {
     // Draw initial dot at very start of path
     if (trainLen > 0) {
       const pt = trainActive.getPointAtLength(0);
-      trainDot.setAttribute('cx', pt.x);
-      trainDot.setAttribute('cy', pt.y);
+      trainDot.style.left = `${pt.x}%`;
+      trainDot.style.top = `${pt.y}%`;
     }
     // Tiny animation to show train "arriving" at chapter 1
     animateTrain(0, 0.02, null);
