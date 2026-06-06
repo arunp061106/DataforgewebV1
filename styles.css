@@ -1494,8 +1494,8 @@ body.gate-active {
   left: 28px;
   top: 100px;
   bottom: 100px;
-  width: 1px;
-  background: rgba(57, 255, 20, 0.08);
+  width: 2px;
+  background: rgba(57, 255, 20, 0.12);
   z-index: 100;
   pointer-events: none;
 }
@@ -1509,13 +1509,25 @@ body.gate-active {
 .scroll-progress-text {
   position: absolute;
   bottom: -22px;
-  left: -15px;
+  left: -14px;
   font-family: var(--ff-mono);
   font-size: 0.62rem;
   color: var(--g);
   width: 30px;
   text-align: center;
   font-weight: 700;
+}
+.scroll-progress-label {
+  position: absolute;
+  top: -22px;
+  left: -19px;
+  font-family: var(--ff-mono);
+  font-size: 0.55rem;
+  color: rgba(57, 255, 20, 0.5);
+  width: 40px;
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: 0.05em;
 }
 .scroll-grid-scanner {
   position: fixed;
