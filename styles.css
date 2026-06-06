@@ -1553,8 +1553,8 @@ body.gate-active {
 #features-timeline-section {
   position: relative;
   width: 100%;
-  background: linear-gradient(to bottom, #050202, #0e0505, #050202);
-  padding: 100px 0;
+  background: linear-gradient(to bottom, #040804, #081208, #040804);
+  padding: 140px 0;
   z-index: 2;
   overflow: hidden;
 }
@@ -1571,14 +1571,14 @@ body.gate-active {
 .timeline-bg-glow.glow-1 {
   width: min(600px, 90vw);
   aspect-ratio: 1;
-  background: radial-gradient(circle, #ff3300 0%, transparent 70%);
+  background: radial-gradient(circle, var(--g) 0%, transparent 70%);
   top: 15%;
   left: -15%;
 }
 .timeline-bg-glow.glow-2 {
   width: min(650px, 100vw);
   aspect-ratio: 1;
-  background: radial-gradient(circle, #ff6600 0%, transparent 70%);
+  background: radial-gradient(circle, var(--cyan) 0%, transparent 70%);
   bottom: 20%;
   right: -20%;
 }
@@ -1602,7 +1602,7 @@ body.gate-active {
 
 /* Base background winding path */
 .timeline-base-path {
-  stroke: rgba(255, 60, 0, 0.08);
+  stroke: rgba(57, 255, 20, 0.08);
   stroke-width: 4px;
   stroke-linecap: round;
   stroke-dasharray: 8 6; /* dotted/dashed trail */
@@ -1613,7 +1613,7 @@ body.gate-active {
   stroke: url(#pathGradient);
   stroke-width: 5px;
   stroke-linecap: round;
-  filter: drop-shadow(0 0 8px rgba(255, 51, 0, 0.6)) drop-shadow(0 0 15px rgba(255, 102, 0, 0.3));
+  filter: drop-shadow(0 0 8px rgba(57, 255, 20, 0.6)) drop-shadow(0 0 15px rgba(0, 245, 212, 0.3));
   stroke-dasharray: 3000; /* Will be updated in JS */
   stroke-dashoffset: 3000;
   transition: stroke-dashoffset 0.05s ease-out;
@@ -1628,8 +1628,8 @@ body.gate-active {
   background: #ffffff;
   box-shadow: 
     0 0 10px #ffffff,
-    0 0 20px #ff3300,
-    0 0 40px #ff6600;
+    0 0 20px var(--g),
+    0 0 40px var(--cyan);
   transform: translate(-50%, -50%);
   pointer-events: none;
   left: 50%;
@@ -1644,7 +1644,7 @@ body.gate-active {
   z-index: 5;
   display: flex;
   flex-direction: column;
-  gap: 80px;
+  gap: 160px; /* Increased from 80px for breathing room */
 }
 
 /* Layout Row */
@@ -1657,13 +1657,13 @@ body.gate-active {
 
 /* Card wrappers */
 .timeline-card-wrapper {
-  background: rgba(14, 8, 8, 0.65);
+  background: rgba(8, 14, 8, 0.65);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 60, 0, 0.12);
+  border: 1px solid rgba(57, 255, 20, 0.12);
   border-radius: 20px;
-  padding: 10px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 51, 0, 0.03);
+  padding: 14px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(57, 255, 20, 0.03);
   transition: border-color 0.4s var(--ease), box-shadow 0.4s var(--ease), transform 0.4s var(--ease), opacity 0.6s var(--ease);
   opacity: 0.15;
   transform: translateY(40px);
@@ -1671,46 +1671,56 @@ body.gate-active {
 .timeline-card-wrapper.active {
   opacity: 1;
   transform: translateY(0);
-  border-color: rgba(255, 60, 0, 0.35);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6), 0 0 40px rgba(255, 51, 0, 0.08);
+  border-color: rgba(57, 255, 20, 0.35);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6), 0 0 40px rgba(57, 255, 20, 0.08);
 }
 .timeline-card-wrapper:hover {
-  border-color: rgba(255, 60, 0, 0.6);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.65), 0 0 50px rgba(255, 51, 0, 0.15);
+  border-color: rgba(57, 255, 20, 0.6);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.65), 0 0 50px rgba(57, 255, 20, 0.15);
   transform: translateY(-4px);
 }
 
 .timeline-card-wrapper section {
-  padding: 30px 20px !important;
+  padding: 48px 36px !important; /* Increased padding inside section */
+}
+
+.timeline-card-wrapper p {
+  line-height: 1.85 !important;
+  margin-top: 10px;
+}
+
+.timeline-card-wrapper h3 {
+  margin-bottom: 12px;
+  letter-spacing: 0.02em;
 }
 
 /* Custom Theme Overrides for Bento Cards & Domain Cards inside timeline */
 #features-timeline-section .bento-card,
 #features-timeline-section .dcard,
 #features-timeline-section .act-card {
-  border-color: rgba(255, 60, 0, 0.12) !important;
-  background: rgba(20, 10, 10, 0.5) !important;
+  border-color: rgba(57, 255, 20, 0.12) !important;
+  background: rgba(10, 20, 10, 0.5) !important;
 }
 #features-timeline-section .bento-card:hover,
 #features-timeline-section .dcard:hover,
 #features-timeline-section .act-card:hover {
-  border-color: rgba(255, 102, 0, 0.45) !important;
-  box-shadow: 0 0 24px rgba(255, 51, 0, 0.12) !important;
+  border-color: rgba(0, 245, 212, 0.45) !important;
+  box-shadow: 0 0 24px rgba(57, 255, 20, 0.12) !important;
 }
 #features-timeline-section .bento-num,
 #features-timeline-section .dcard-num,
 #features-timeline-section .act-num,
 #features-timeline-section .accent-fill {
-  color: #ff5500 !important;
+  color: var(--g) !important;
 }
 #features-timeline-section .pill {
-  border-color: rgba(255, 60, 0, 0.25) !important;
-  color: #ff6600 !important;
-  background: rgba(20, 10, 10, 0.5) !important;
-  text-shadow: 0 0 8px rgba(255, 51, 0, 0.3) !important;
+  border-color: rgba(57, 255, 20, 0.25) !important;
+  color: var(--cyan) !important;
+  background: rgba(10, 20, 10, 0.5) !important;
+  text-shadow: 0 0 8px rgba(0, 245, 212, 0.3) !important;
 }
 #features-timeline-section .quote-line {
-  background: linear-gradient(to right, transparent, #ff5500, transparent) !important;
+  background: linear-gradient(to right, transparent, var(--g), transparent) !important;
 }
 
 /* Path Anchors & Connector Lines */
@@ -1720,23 +1730,23 @@ body.gate-active {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #080303;
-  border: 3px solid rgba(255, 60, 0, 0.25);
-  box-shadow: 0 0 10px rgba(255, 51, 0, 0.1);
+  background: #030603;
+  border: 3px solid rgba(57, 255, 20, 0.25);
+  box-shadow: 0 0 10px rgba(57, 255, 20, 0.1);
   z-index: 11;
   transition: border-color 0.4s var(--ease), background 0.4s var(--ease), box-shadow 0.4s var(--ease);
 }
 .timeline-row.node-active .timeline-dot-anchor {
-  border-color: #ff3300;
+  border-color: var(--g);
   background: #ffffff;
-  box-shadow: 0 0 15px #ff3300, 0 0 5px #ffffff;
+  box-shadow: 0 0 15px var(--g), 0 0 5px #ffffff;
 }
 
 .timeline-connector {
   position: absolute;
   top: 50%;
   height: 2px;
-  background: linear-gradient(to right, transparent, rgba(255, 60, 0, 0.2), transparent);
+  background: linear-gradient(to right, transparent, rgba(57, 255, 20, 0.2), transparent);
   width: 0%;
   z-index: 4;
   transform: translateY(-50%);
@@ -1747,21 +1757,21 @@ body.gate-active {
 .connector-left {
   right: 50%;
   left: auto;
-  border-top: 1.5px dashed rgba(255, 60, 0, 0.15);
+  border-top: 1.5px dashed rgba(57, 255, 20, 0.15);
   background: none !important;
   height: 1px;
 }
 .connector-right {
   left: 50%;
   right: auto;
-  border-top: 1.5px dashed rgba(255, 60, 0, 0.15);
+  border-top: 1.5px dashed rgba(57, 255, 20, 0.15);
   background: none !important;
   height: 1px;
 }
 .timeline-row.node-active .timeline-connector {
   border-top-style: solid;
-  border-top-color: #ff5500;
-  filter: drop-shadow(0 0 3px rgba(255, 51, 0, 0.5));
+  border-top-color: var(--g);
+  filter: drop-shadow(0 0 3px rgba(57, 255, 20, 0.5));
 }
 
 /* Grid Alignments */
@@ -1782,7 +1792,7 @@ body.gate-active {
 /* Responsive Overrides (Screen width <= 900px) */
 @media (max-width: 900px) {
   #features-timeline-section {
-    padding: 60px 0;
+    padding: 80px 0;
   }
   .timeline-path-container {
     left: 28px;
@@ -1819,6 +1829,6 @@ body.gate-active {
     grid-column: 2 !important;
   }
   .timeline-card-wrapper section {
-    padding: 24px 12px !important;
+    padding: 36px 20px !important; /* Added mobile padding for spacing */
   }
 }
