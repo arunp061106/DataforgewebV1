@@ -1,35 +1,36 @@
 /* ═══════════════════════════════════════════════
-   DATA FORGE — Immersive JavaScript
-   Matrix rain · Cursor · Terminal typing · Reveal
-   Gate Loader · Scroll Animations
+   DATA FORGE — Immersive JavaScript (Final Build)
+   Gate Loader · Matrix Rain · Cursor · Terminal
+   Scroll Animations · Rail Timeline · Reveals
    ═══════════════════════════════════════════════ */
 
-// ── Gate Loader — Sci-Fi Entry ───────────────
-(function() {
+// ══════════════════════════════════════════════
+// 1. GATE LOADER — Sci-Fi Entry
+// ══════════════════════════════════════════════
+(function () {
   const gate = document.getElementById('gate-loader');
   if (!gate) return;
 
-  // After loader bar finishes filling (2.0s), trigger gates split opening animation
-  setTimeout(() => {
-    gate.classList.add('gate-open');
-  }, 2000);
+  // Fill bar completes at 2.0s → open gates
+  setTimeout(() => gate.classList.add('gate-open'), 2000);
 
-  // Smoothly fade out the entire gate container after transitions finish (3.2s)
-  setTimeout(() => {
-    gate.classList.add('gate-hidden');
-  }, 3200);
+  // Fade out overlay
+  setTimeout(() => gate.classList.add('gate-hidden'), 3200);
 
-  // Completely remove gate element and unlock scrolling (3.6s)
+  // Remove from DOM, unlock scroll
   setTimeout(() => {
     gate.remove();
     document.body.classList.remove('gate-active');
   }, 3600);
 })();
 
-// ── Custom cursor ────────────────────────────
+
+// ══════════════════════════════════════════════
+// 2. CUSTOM CURSOR
+// ══════════════════════════════════════════════
 const cursor      = document.getElementById('cursor');
 const cursorTrail = document.getElementById('cursorTrail');
-let mx = -100, my = -100, tx = -100, ty = -100;
+let mx = -200, my = -200, tx = -200, ty = -200;
 
 document.addEventListener('mousemove', e => {
   mx = e.clientX; my = e.clientY;
@@ -37,43 +38,44 @@ document.addEventListener('mousemove', e => {
   cursor.style.top  = my + 'px';
 });
 
-function trailTick() {
+(function trailLoop() {
   tx += (mx - tx) * 0.14;
   ty += (my - ty) * 0.14;
   cursorTrail.style.left = tx + 'px';
   cursorTrail.style.top  = ty + 'px';
-  requestAnimationFrame(trailTick);
-}
-trailTick();
+  requestAnimationFrame(trailLoop);
+})();
 
-// ── Matrix rain canvas ───────────────────────
+
+// ══════════════════════════════════════════════
+// 3. GLOBAL MATRIX RAIN (background canvas)
+// ══════════════════════════════════════════════
 const canvas = document.getElementById('matrixCanvas');
 const ctx    = canvas.getContext('2d');
 let W, H, columns = [];
-const CHARS = 'DATAFORGEANALYTICSML01ΨΩΔΛαβδεζηθ∑∞∂∫√π';
+const CHARS = 'DATAFORGEANALYTICSML01ΨΩΔΛαβδεζη∑∞∂∫√π';
 
 function resetColumn(col) {
-  col.x = Math.random() * W;
-  col.y = -Math.random() * 20; // Start above screen
-  col.depth = 0.1 + Math.random() * 0.9; // Depth factor (0.1 to 1.0)
-  col.fontSize = Math.floor(8 + col.depth * 9); // Font size 8px to 17px based on depth
-  col.speed = 0.35 + col.depth * 1.45; // Speed based on depth for parallax 3D effect
-  col.opacity = 0.15 + col.depth * 0.85; // Opacity based on depth
-  col.trailLength = Math.floor(10 + col.depth * 18); // Trail length 10 to 28 characters
-  col.glow = col.depth > 0.72; // Only foreground columns have glowing leads
-  col.chars = Array.from({ length: 40 }, () => CHARS[Math.floor(Math.random() * CHARS.length)]);
+  col.x          = Math.random() * W;
+  col.y          = -Math.random() * 20;
+  col.depth      = 0.1 + Math.random() * 0.9;
+  col.fontSize   = Math.floor(8 + col.depth * 9);
+  col.speed      = 0.35 + col.depth * 1.45;
+  col.opacity    = 0.15 + col.depth * 0.85;
+  col.trailLen   = Math.floor(10 + col.depth * 18);
+  col.glow       = col.depth > 0.72;
+  col.chars      = Array.from({ length: 40 }, () =>
+    CHARS[Math.floor(Math.random() * CHARS.length)]);
 }
 
 function initMatrix() {
   W = canvas.width  = window.innerWidth;
   H = canvas.height = window.innerHeight;
-  // Dynamic column density based on width, giving it a rich, dense matrix-vibe
-  const colsCount = Math.floor(W / 12);
   columns = [];
-  for (let i = 0; i < colsCount; i++) {
+  const count = Math.floor(W / 12);
+  for (let i = 0; i < count; i++) {
     const col = {};
     resetColumn(col);
-    // Stagger Y so the rain is immediately dispersed on load
     col.y = Math.random() * (H / col.fontSize);
     columns.push(col);
   }
@@ -82,62 +84,57 @@ initMatrix();
 window.addEventListener('resize', initMatrix, { passive: true });
 
 function drawMatrix() {
-  // Clear transparently so elements behind or on top render flawlessly
   ctx.clearRect(0, 0, W, H);
-
-  for (let i = 0; i < columns.length; i++) {
-    const col = columns[i];
-
-    for (let j = 0; j < col.trailLength; j++) {
-      const yGrid = Math.floor(col.y) - j;
+  for (const col of columns) {
+    for (let j = 0; j < col.trailLen; j++) {
+      const yGrid  = Math.floor(col.y) - j;
       if (yGrid < 0) continue;
+      const yPx = yGrid * col.fontSize;
+      if (yPx > H + col.fontSize) continue;
 
-      const yPixel = yGrid * col.fontSize;
-      if (yPixel > H + col.fontSize) continue;
-
-      // Calculate alpha fading as it goes up the trail
-      const trailFactor = 1 - (j / col.trailLength);
-      const alpha = trailFactor * col.opacity;
-
+      const tFactor = 1 - j / col.trailLen;
+      const alpha   = tFactor * col.opacity;
       ctx.font = `bold ${col.fontSize}px 'Space Mono', monospace`;
 
       if (j === 0) {
-        // Glowing lead character: bright white/light-green
-        ctx.fillStyle = `rgba(220, 255, 230, ${col.opacity})`;
+        ctx.fillStyle  = `rgba(220,255,230,${col.opacity})`;
         ctx.shadowColor = '#00ff66';
-        ctx.shadowBlur = col.glow ? 12 : 0;
+        ctx.shadowBlur  = col.glow ? 12 : 0;
       } else {
-        // Trail characters: vibrant neon green
-        ctx.fillStyle = `rgba(0, 255, 102, ${alpha})`;
-        ctx.shadowBlur = 0; // Turn off glow for trail characters for high FPS
+        ctx.fillStyle = `rgba(0,255,102,${alpha})`;
+        ctx.shadowBlur = 0;
       }
-
-      const ch = col.chars[yGrid % col.chars.length];
-      ctx.fillText(ch, col.x, yPixel);
+      ctx.fillText(col.chars[yGrid % col.chars.length], col.x, yPx);
     }
-
-    // Update position
     col.y += col.speed;
-
-    // Reset column if it goes fully off-screen
-    if ((col.y - col.trailLength) * col.fontSize > H) {
-      resetColumn(col);
-    }
+    if ((col.y - col.trailLen) * col.fontSize > H) resetColumn(col);
   }
-
-  // Ensure shadowBlur is reset for other canvas operations
   ctx.shadowBlur = 0;
   requestAnimationFrame(drawMatrix);
 }
 drawMatrix();
 
-// ── Navbar sticky ────────────────────────────
-const navbar = document.getElementById('navbar');
+
+// ══════════════════════════════════════════════
+// 4. NAVBAR — sticky + active link highlight
+// ══════════════════════════════════════════════
+const navbar     = document.getElementById('navbar');
+const navAnchors = document.querySelectorAll('.nav-menu a:not(.nav-btn)');
+
 window.addEventListener('scroll', () => {
   navbar.classList.toggle('stuck', window.scrollY > 50);
+
+  // Highlight active section link
+  let current = '';
+  document.querySelectorAll('section[id], div[id]').forEach(sec => {
+    if (window.scrollY >= sec.offsetTop - 140) current = sec.id;
+  });
+  navAnchors.forEach(a => {
+    a.style.color = a.getAttribute('href') === `#${current}` ? 'var(--g)' : '';
+  });
 }, { passive: true });
 
-// ── Hamburger ────────────────────────────────
+// Hamburger
 const hamburger = document.getElementById('hamburger');
 const navMenu   = document.getElementById('navMenu');
 hamburger.addEventListener('click', () => navMenu.classList.toggle('open'));
@@ -145,8 +142,11 @@ navMenu.querySelectorAll('a').forEach(a => {
   a.addEventListener('click', () => navMenu.classList.remove('open'));
 });
 
-// ── Terminal typing animation ─────────────────
-const phrases = [
+
+// ══════════════════════════════════════════════
+// 5. TERMINAL TYPING ANIMATION
+// ══════════════════════════════════════════════
+const PHRASES = [
   'forging the future through data...',
   'data science · analytics · big data',
   'open to all branches, all years.',
@@ -158,21 +158,16 @@ let phraseIdx = 0, charIdx = 0, deleting = false;
 
 function typeTerminal() {
   if (!termEl) return;
-  const phrase = phrases[phraseIdx];
-
+  const phrase = PHRASES[phraseIdx];
   if (!deleting) {
     termEl.textContent = phrase.slice(0, ++charIdx);
-    if (charIdx === phrase.length) {
-      deleting = true;
-      setTimeout(typeTerminal, 2200);
-      return;
-    }
+    if (charIdx === phrase.length) { deleting = true; setTimeout(typeTerminal, 2200); return; }
     setTimeout(typeTerminal, 52);
   } else {
     termEl.textContent = phrase.slice(0, --charIdx);
     if (charIdx === 0) {
       deleting = false;
-      phraseIdx = (phraseIdx + 1) % phrases.length;
+      phraseIdx = (phraseIdx + 1) % PHRASES.length;
       setTimeout(typeTerminal, 400);
       return;
     }
@@ -181,21 +176,15 @@ function typeTerminal() {
 }
 setTimeout(typeTerminal, 1200);
 
-// ── Scroll reveal ────────────────────────────
-const revealSelectors = '.reveal-up, .reveal-left, .reveal-right, .reveal-bento';
-const revealEls = document.querySelectorAll(revealSelectors);
 
-const revealObs = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      const delay = parseFloat(e.target.dataset.delay || 0);
-      setTimeout(() => e.target.classList.add('visible'), delay * 1000);
-      revealObs.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+// ══════════════════════════════════════════════
+// 6. UNIVERSAL SCROLL REVEAL
+// ══════════════════════════════════════════════
+const revealEls = document.querySelectorAll(
+  '.reveal-up, .reveal-left, .reveal-right, .reveal-bento'
+);
 
-// Stagger bento / dcard children
+// Stagger delays for grid children
 document.querySelectorAll('.obj-bento .bento-card').forEach((el, i) => {
   el.dataset.delay = (i * 0.07).toFixed(2);
 });
@@ -203,223 +192,206 @@ document.querySelectorAll('.act-grid .act-card').forEach((el, i) => {
   el.dataset.delay = (i * 0.08).toFixed(2);
 });
 
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const delay = parseFloat(e.target.dataset.delay || 0);
+    setTimeout(() => e.target.classList.add('visible'), delay * 1000);
+    revealObs.unobserve(e.target);
+  });
+}, { threshold: 0.07, rootMargin: '0px 0px -24px 0px' });
+
 revealEls.forEach(el => revealObs.observe(el));
 
-// ── Horizontal drag scroll (domains) ─────────
+
+// ══════════════════════════════════════════════
+// 7. HORIZONTAL DRAG SCROLL (Domains)
+// ══════════════════════════════════════════════
 const scrollWrap = document.getElementById('domainsScroll');
 if (scrollWrap) {
   let isDown = false, startX, scrollLeft;
-
   scrollWrap.addEventListener('mousedown', e => {
     isDown = true;
     scrollWrap.classList.add('grabbing');
-    startX    = e.pageX - scrollWrap.offsetLeft;
+    startX     = e.pageX - scrollWrap.offsetLeft;
     scrollLeft = scrollWrap.scrollLeft;
   });
-  document.addEventListener('mouseup',    () => { isDown = false; scrollWrap.classList.remove('grabbing'); });
+  document.addEventListener('mouseup', () => {
+    isDown = false;
+    scrollWrap.classList.remove('grabbing');
+  });
   scrollWrap.addEventListener('mousemove', e => {
     if (!isDown) return;
     e.preventDefault();
-    const x    = e.pageX - scrollWrap.offsetLeft;
-    const walk = (x - startX) * 1.4;
+    const walk = (e.pageX - scrollWrap.offsetLeft - startX) * 1.4;
     scrollWrap.scrollLeft = scrollLeft - walk;
   });
-
-  // Touch support
-  let touchStartX, touchScrollLeft;
+  // Touch
+  let tStartX, tScrollLeft;
   scrollWrap.addEventListener('touchstart', e => {
-    touchStartX    = e.touches[0].pageX;
-    touchScrollLeft = scrollWrap.scrollLeft;
+    tStartX     = e.touches[0].pageX;
+    tScrollLeft = scrollWrap.scrollLeft;
   }, { passive: true });
   scrollWrap.addEventListener('touchmove', e => {
-    const x    = e.touches[0].pageX;
-    const walk = (touchStartX - x) * 1.2;
-    scrollWrap.scrollLeft = touchScrollLeft + walk;
+    scrollWrap.scrollLeft = tScrollLeft + (tStartX - e.touches[0].pageX) * 1.2;
   }, { passive: true });
 }
 
-// ── Active nav highlight ──────────────────────
-const sections  = document.querySelectorAll('section[id], div[id="join"]');
-const navAnchors = document.querySelectorAll('.nav-menu a:not(.nav-btn)');
-window.addEventListener('scroll', () => {
-  let current = '';
-  document.querySelectorAll('section[id]').forEach(sec => {
-    if (window.scrollY >= sec.offsetTop - 130) current = sec.id;
-  });
-  navAnchors.forEach(a => {
-    a.style.color = a.getAttribute('href') === `#${current}` ? 'var(--g)' : '';
-  });
-}, { passive: true });
 
-// ── Tilt effect on dcard hover ────────────────
+// ══════════════════════════════════════════════
+// 8. CARD TILT EFFECT (bento + domain cards)
+// ══════════════════════════════════════════════
 document.querySelectorAll('.dcard, .bento-card').forEach(card => {
   card.addEventListener('mousemove', e => {
-    const rect  = card.getBoundingClientRect();
-    const x     = (e.clientX - rect.left) / rect.width  - 0.5;
-    const y     = (e.clientY - rect.top)  / rect.height - 0.5;
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width  - 0.5;
+    const y = (e.clientY - r.top)  / r.height - 0.5;
     card.style.transform = `translateY(-6px) rotateX(${-y * 6}deg) rotateY(${x * 6}deg)`;
   });
-  card.addEventListener('mouseleave', () => {
-    card.style.transform = '';
-  });
+  card.addEventListener('mouseleave', () => { card.style.transform = ''; });
 });
 
-// ── Particle burst on CTA click ───────────────
+
+// ══════════════════════════════════════════════
+// 9. CTA PARTICLE BURST
+// ══════════════════════════════════════════════
 document.querySelectorAll('.cta-primary').forEach(btn => {
-  btn.addEventListener('click', function(e) {
-    for (let i = 0; i < 14; i++) {
+  btn.addEventListener('click', e => {
+    for (let i = 0; i < 16; i++) {
       const p = document.createElement('span');
+      const size = 4 + Math.random() * 4;
       p.style.cssText = `
-        position:fixed;
-        left:${e.clientX}px;
-        top:${e.clientY}px;
-        width:${4 + Math.random()*4}px;
-        height:${4 + Math.random()*4}px;
-        background:${Math.random()>.5?'#39ff14':'#00f5d4'};
-        border-radius:50%;
-        pointer-events:none;
-        z-index:9999;
-        transition:transform 0.7s ease, opacity 0.7s ease;
+        position:fixed;left:${e.clientX}px;top:${e.clientY}px;
+        width:${size}px;height:${size}px;
+        background:${Math.random() > .5 ? '#39ff14' : '#00f5d4'};
+        border-radius:50%;pointer-events:none;z-index:9999;
+        transition:transform .75s ease,opacity .75s ease;
       `;
       document.body.appendChild(p);
-      const angle = (i / 14) * Math.PI * 2;
-      const dist  = 60 + Math.random() * 80;
+      const angle = (i / 16) * Math.PI * 2;
+      const dist  = 60 + Math.random() * 90;
       requestAnimationFrame(() => {
-        p.style.transform = `translate(${Math.cos(angle)*dist}px, ${Math.sin(angle)*dist}px) scale(0)`;
+        p.style.transform = `translate(${Math.cos(angle)*dist}px,${Math.sin(angle)*dist}px) scale(0)`;
         p.style.opacity   = '0';
       });
-      setTimeout(() => p.remove(), 800);
+      setTimeout(() => p.remove(), 900);
     }
   });
 });
 
-// ── Scroll-Linked Animations & Graphics (Immersive Matrix Rail) ──
-(function() {
-  const gridScanner     = document.querySelector('.scroll-grid-scanner');
-  const ball1           = document.querySelector('.ball-1');
-  const ball2           = document.querySelector('.ball-2');
-  const ball3           = document.querySelector('.ball-3');
-  
-  const timelineSection = document.getElementById('features-timeline-section');
-  const activeLine      = document.getElementById('activeRailLine');
-  const railGlowDot     = document.getElementById('railGlowDot');
-  const timelineRows    = document.querySelectorAll('.timeline-row');
 
-  // ── Matrix Rain for the Rail Canvas ──
+// ══════════════════════════════════════════════
+// 10. SCROLL-LINKED SYSTEM
+//     • Grid scanner line (full page)
+//     • Ambient glow parallax
+//     • Rail timeline progress + dot
+//     • Timeline node activation + connector lines
+//     • Rail canvas matrix rain
+// ══════════════════════════════════════════════
+(function () {
+
+  /* ── Elements ───────────────────────────── */
+  const gridScanner    = document.querySelector('.scroll-grid-scanner');
+  const ball1          = document.querySelector('.ball-1');
+  const ball2          = document.querySelector('.ball-2');
+  const ball3          = document.querySelector('.ball-3');
+  const timelineSec    = document.getElementById('features-timeline-section');
+  const activeLine     = document.getElementById('activeRailLine');
+  const railGlowDot    = document.getElementById('railGlowDot');
+  const timelineRows   = document.querySelectorAll('.timeline-row');
+
+  /* ── Rail Canvas Matrix Rain ────────────── */
   const railCanvas = document.getElementById('railCanvas');
-  let railCtx, rW = 0, rH = 0, railColumns = [];
-  const RAIL_CHARS = '010101DATAFORGEANALYTICSMLΨΩΔ';
+  let railCtx, rW = 0, rH = 0, railCols = [];
+  const RAIL_CHARS = '010101DATAFORGEANALYTICSMLΨΩΔΛ';
+  let railAnimId   = null;
 
   function initRailMatrix() {
     if (!railCanvas) return;
-    railCtx = railCanvas.getContext('2d');
-    
+    if (!railCtx) railCtx = railCanvas.getContext('2d');
     const track = railCanvas.parentElement;
     if (!track) return;
-    
-    const currentWidth = track.clientWidth;
-    const currentHeight = track.clientHeight;
-    
-    // Only re-initialize if dimensions have changed
-    if (rW === currentWidth && rH === currentHeight && railColumns.length > 0) return;
-    
-    rW = railCanvas.width = currentWidth;
-    rH = railCanvas.height = currentHeight;
-    
-    // Column every 8 pixels for density
-    const colsCount = Math.floor(rW / 8) + 1;
-    railColumns = [];
-    for (let i = 0; i < colsCount; i++) {
-      railColumns.push({
-        x: i * 8,
-        y: Math.random() * rH,
-        speed: 1.2 + Math.random() * 2.8,
-        fontSize: 7 + Math.random() * 5,
-        opacity: 0.15 + Math.random() * 0.45
+    const nW = track.clientWidth;
+    const nH = track.clientHeight;
+    if (nW === rW && nH === rH && railCols.length > 0) return;
+    rW = railCanvas.width  = nW;
+    rH = railCanvas.height = nH;
+    const count = Math.floor(rW / 8) + 1;
+    railCols = [];
+    for (let i = 0; i < count; i++) {
+      railCols.push({
+        x:       i * 8,
+        y:       Math.random() * rH,
+        speed:   1.2 + Math.random() * 2.8,
+        fontSize:7 + Math.random() * 5,
+        opacity: 0.15 + Math.random() * 0.45,
       });
     }
   }
 
   function drawRailMatrix() {
     if (!railCanvas || !railCtx) return;
-    
-    railCtx.fillStyle = 'rgba(4, 9, 4, 0.16)';
+    railCtx.fillStyle = 'rgba(4,9,4,0.18)';
     railCtx.fillRect(0, 0, rW, rH);
-    
-    for (let i = 0; i < railColumns.length; i++) {
-      const col = railColumns[i];
-      railCtx.font = `bold ${col.fontSize}px 'Space Mono', monospace`;
-      
-      railCtx.fillStyle = Math.random() > 0.85 
-        ? `rgba(0, 245, 212, ${col.opacity})` 
-        : `rgba(57, 255, 20, ${col.opacity})`;
-        
-      const char = RAIL_CHARS[Math.floor(Math.random() * RAIL_CHARS.length)];
-      railCtx.fillText(char, col.x, col.y);
-      
+    for (const col of railCols) {
+      railCtx.font      = `bold ${col.fontSize}px 'Space Mono', monospace`;
+      railCtx.fillStyle = Math.random() > 0.85
+        ? `rgba(0,245,212,${col.opacity})`
+        : `rgba(57,255,20,${col.opacity})`;
+      railCtx.fillText(
+        RAIL_CHARS[Math.floor(Math.random() * RAIL_CHARS.length)],
+        col.x, col.y
+      );
       col.y += col.speed;
-      if (col.y > rH) {
-        col.y = -20;
-        col.speed = 1.2 + Math.random() * 2.8;
-      }
+      if (col.y > rH) { col.y = -20; col.speed = 1.2 + Math.random() * 2.8; }
     }
-    requestAnimationFrame(drawRailMatrix);
+    railAnimId = requestAnimationFrame(drawRailMatrix);
   }
 
-  // Handle Resize and recalculate canvas dimensions
-  function handleResize() {
-    initRailMatrix();
-  }
-  window.addEventListener('resize', handleResize, { passive: true });
+  window.addEventListener('resize', initRailMatrix, { passive: true });
 
-  // Scroll handler
-  function handleScroll() {
-    const scrollTop     = window.scrollY || document.documentElement.scrollTop;
-    const scrollHeight  = document.documentElement.scrollHeight - window.innerHeight;
+  /* ── Scroll handler ─────────────────────── */
+  function onScroll() {
+    const scrollTop    = window.scrollY;
+    const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
     if (scrollHeight <= 0) return;
+    const pct = scrollTop / scrollHeight;
 
-    const scrollPercent = scrollTop / scrollHeight;
+    // 1. Grid scanner line
+    if (gridScanner) gridScanner.style.top = `${pct * 100}%`;
 
-    // 1. Update Grid Scanner Line Position
-    if (gridScanner) gridScanner.style.top = `${scrollPercent * 100}%`;
+    // 2. Ambient glow parallax
+    if (ball1) ball1.style.transform = `translate(${pct*120}px,${pct*-90}px) scale(${1+pct*.25})`;
+    if (ball2) ball2.style.transform = `translate(${pct*-140}px,${pct*110}px) scale(${1-pct*.15})`;
+    if (ball3) ball3.style.transform = `translate(${pct*80}px,${pct*140}px) scale(${1+pct*.3})`;
 
-    // 2. Update Ambient Glow Parallax Positions
-    if (ball1) ball1.style.transform = `translate(${scrollPercent * 120}px, ${scrollPercent * -90}px) scale(${1 + scrollPercent * 0.25})`;
-    if (ball2) ball2.style.transform = `translate(${scrollPercent * -140}px, ${scrollPercent * 110}px) scale(${1 - scrollPercent * 0.15})`;
-    if (ball3) ball3.style.transform = `translate(${scrollPercent * 80}px, ${scrollPercent * 140}px) scale(${1 + scrollPercent * 0.3})`;
+    // 3. Rail progress line + glow dot
+    if (timelineSec && activeLine && railGlowDot) {
+      const secTop    = timelineSec.offsetTop;
+      const secHeight = timelineSec.offsetHeight;
+      const vh        = window.innerHeight;
+      const start     = secTop - vh * 0.55;
+      const end       = secTop + secHeight - vh * 0.4;
 
-    // 3. Update Rail Progress Line and Traveler Dot Positioning
-    if (timelineSection && activeLine && railGlowDot) {
-      const secTop = timelineSection.offsetTop;
-      const secHeight = timelineSection.offsetHeight;
-      const viewportHeight = window.innerHeight;
-
-      // Start line filling when top of timeline section is in view, end before it leaves
-      const scrollStart = secTop - viewportHeight * 0.6;
-      const scrollEnd = secTop + secHeight - viewportHeight * 0.4;
-      
       let progress = 0;
-      if (scrollTop >= scrollStart && scrollTop <= scrollEnd) {
-        progress = (scrollTop - scrollStart) / (scrollEnd - scrollStart);
-      } else if (scrollTop > scrollEnd) {
+      if (scrollTop >= start && scrollTop <= end) {
+        progress = (scrollTop - start) / (end - start);
+      } else if (scrollTop > end) {
         progress = 1;
       }
       progress = Math.min(1, Math.max(0, progress));
 
-      // Update active height and dot position
       activeLine.style.height = `${progress * 100}%`;
-      railGlowDot.style.top = `${progress * 100}%`;
+      railGlowDot.style.top   = `${progress * 100}%`;
     }
 
-    // 4. Highlight Timeline Nodes and Reveal Content Cards
+    // 4. Activate timeline rows + connector lines
     timelineRows.forEach(row => {
       const card = row.querySelector('.timeline-card-wrapper');
       if (!card) return;
-      
-      const rect = card.getBoundingClientRect();
-      const triggerPoint = window.innerHeight * 0.8;
-
-      if (rect.top < triggerPoint) {
+      const top   = card.getBoundingClientRect().top;
+      const trigger = window.innerHeight * 0.80;
+      if (top < trigger) {
         row.classList.add('node-active');
         card.classList.add('active');
       } else {
@@ -429,17 +401,17 @@ document.querySelectorAll('.cta-primary').forEach(btn => {
     });
   }
 
-  // Bind passive listener for optimal scrolling FPS
-  window.addEventListener('scroll', handleScroll, { passive: true });
-  
-  // Call once initially to coordinate load state
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  /* ── Init ───────────────────────────────── */
   setTimeout(() => {
     initRailMatrix();
     drawRailMatrix();
-    handleScroll();
-  }, 100);
+    onScroll();
+  }, 150);
 
-  // Re-check heights a few times as image/layout loads
-  setTimeout(initRailMatrix, 600);
-  setTimeout(initRailMatrix, 1600);
+  // Re-check layout after images load
+  setTimeout(initRailMatrix, 700);
+  setTimeout(initRailMatrix, 1800);
+
 })();

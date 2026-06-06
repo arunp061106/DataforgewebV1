@@ -802,7 +802,7 @@ function toggleBadgesPanel() {
   const panel = el('forge-badges-panel');
   const isOpen = !panel.classList.contains('forge-panel-closed');
 
-  if (!isOpen) {
+  if (isOpen) {
     panel.classList.add('forge-panel-closed');
   } else {
     // Render badges
