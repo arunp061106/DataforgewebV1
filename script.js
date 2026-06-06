@@ -265,7 +265,7 @@ document.querySelectorAll('.dcard, .bento-card').forEach(card => {
 });
 
 // ── Particle burst on CTA click ───────────────
-document.querySelectorAll('.cta-primary').forEach(btn => {
+document.querySelectorAll('.cta-primary, .cta-ghost').forEach(btn => {
   btn.addEventListener('click', function(e) {
     for (let i = 0; i < 14; i++) {
       const p = document.createElement('span');
@@ -292,3 +292,81 @@ document.querySelectorAll('.cta-primary').forEach(btn => {
     }
   });
 });
+
+// ── Web Audio Synthesizer (Innovation: Synth audio feedbacks) ──
+const AudioFX = {
+  ctx: null,
+  init() {
+    if (this.ctx) return;
+    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+  },
+  playClick() {
+    this.init();
+    if (!this.ctx) return;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(900, this.ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(200, this.ctx.currentTime + 0.12);
+    gain.gain.setValueAtTime(0.06, this.ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.12);
+    osc.start();
+    osc.stop(this.ctx.currentTime + 0.12);
+  },
+  playHover() {
+    this.init();
+    if (!this.ctx) return;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(1400, this.ctx.currentTime);
+    gain.gain.setValueAtTime(0.006, this.ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.03);
+    osc.start();
+    osc.stop(this.ctx.currentTime + 0.03);
+  }
+};
+
+// Bind Web Audio UI triggers
+document.querySelectorAll('.cta-primary, .cta-ghost, .nav-menu a, .dcard, .bento-card, .act-card').forEach(el => {
+  el.addEventListener('mouseenter', () => AudioFX.playHover(), { passive: true });
+  el.addEventListener('click', () => AudioFX.playClick(), { passive: true });
+});
+
+// ── Sci-Fi HUD Live Telemetry Ticking (Innovation) ──
+(function() {
+  const hudProcessed = document.getElementById('hudProcessed');
+  const hudRecruits = document.getElementById('hudRecruits');
+  const hudAccuracy = document.getElementById('hudAccuracy');
+  if (!hudProcessed || !hudRecruits || !hudAccuracy) return;
+
+  let baseProcessed = 4281912;
+  let baseRecruits = 142;
+  let baseAccuracy = 98.84;
+
+  setInterval(() => {
+    // Tick datasets processed
+    baseProcessed += Math.floor(Math.random() * 8);
+    hudProcessed.textContent = baseProcessed.toLocaleString();
+
+    // Occasional recruits tick
+    if (Math.random() > 0.97) {
+      baseRecruits += 1;
+      hudRecruits.textContent = baseRecruits;
+      // UI feedback pulse
+      hudRecruits.style.color = 'var(--cyan)';
+      setTimeout(() => hudRecruits.style.color = 'var(--g)', 300);
+    }
+
+    // Accuracy micro-jitter
+    if (Math.random() > 0.8) {
+      const jitter = (Math.random() * 0.04 - 0.02);
+      const cur = Math.min(99.99, Math.max(98.00, baseAccuracy + jitter));
+      hudAccuracy.textContent = cur.toFixed(2) + '%';
+    }
+  }, 400);
+})();

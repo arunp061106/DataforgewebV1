@@ -453,7 +453,7 @@ body:has(a:hover) .cursor-trail { width: 48px; height: 48px; border-color: rgba(
   border: 1px solid var(--border);
   padding: 10px 20px;
   border-radius: 6px;
-  margin-bottom: 54px;
+  margin-bottom: 30px;
   min-width: 300px;
   max-width: 100%;
   justify-content: flex-start;
@@ -462,6 +462,62 @@ body:has(a:hover) .cursor-trail { width: 48px; height: 48px; border-color: rgba(
 .terminal-text   { flex: 1; text-align: left; }
 .terminal-cursor { animation: blink .9s step-end infinite; color: var(--g); }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* ─── Sci-Fi Telemetry HUD (Innovation) ───── */
+.hero-hud {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  background: rgba(14, 14, 14, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(57, 255, 20, 0.15);
+  padding: 12px 28px;
+  border-radius: 12px;
+  margin: 0 auto 40px auto;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.6), 0 0 20px rgba(57, 255, 20, 0.05);
+  animation: heroIn 1.2s var(--ease) both;
+  width: fit-content;
+}
+.hud-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.hud-meta {
+  font-family: var(--ff-mono);
+  font-size: 0.58rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.hud-number {
+  font-family: var(--ff-display);
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: var(--g);
+  text-shadow: 0 0 10px rgba(57, 255, 20, 0.45);
+}
+.hud-divider {
+  width: 1px;
+  height: 32px;
+  background: rgba(57, 255, 20, 0.15);
+}
+@media (max-width: 600px) {
+  .hero-hud {
+    flex-direction: column;
+    gap: 16px;
+    padding: 18px 24px;
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 36px;
+  }
+  .hud-divider {
+    width: 60px;
+    height: 1px;
+  }
+}
 
 .hero-ctas {
   display: flex;
