@@ -295,10 +295,12 @@ document.querySelectorAll('.cta-primary').forEach(btn => {
 
 // ── Scroll-Linked Animations & Graphics ───────────────────────
 (function() {
-  const gridScanner   = document.querySelector('.scroll-grid-scanner');
-  const ball1         = document.querySelector('.ball-1');
-  const ball2         = document.querySelector('.ball-2');
-  const ball3         = document.querySelector('.ball-3');
+  const gridScanner     = document.querySelector('.scroll-grid-scanner');
+  const ball1           = document.querySelector('.ball-1');
+  const ball2           = document.querySelector('.ball-2');
+  const ball3           = document.querySelector('.ball-3');
+  const featuresSection = document.getElementById('features-section');
+  const horizontalTrack = document.querySelector('.horizontal-track');
 
   function handleScroll() {
     const scrollTop     = window.scrollY || document.documentElement.scrollTop;
@@ -314,6 +316,22 @@ document.querySelectorAll('.cta-primary').forEach(btn => {
     if (ball1) ball1.style.transform = `translate(${scrollPercent * 120}px, ${scrollPercent * -90}px) scale(${1 + scrollPercent * 0.25})`;
     if (ball2) ball2.style.transform = `translate(${scrollPercent * -140}px, ${scrollPercent * 110}px) scale(${1 - scrollPercent * 0.15})`;
     if (ball3) ball3.style.transform = `translate(${scrollPercent * 80}px, ${scrollPercent * 140}px) scale(${1 + scrollPercent * 0.3})`;
+
+    // 3. Update Pinned Horizontal Scroll Track
+    if (featuresSection && horizontalTrack && window.innerWidth > 900) {
+      const secTop = featuresSection.offsetTop;
+      const secHeight = featuresSection.offsetHeight;
+      const viewportHeight = window.innerHeight;
+
+      if (scrollTop >= secTop && scrollTop <= (secTop + secHeight - viewportHeight)) {
+        const progress = (scrollTop - secTop) / (secHeight - viewportHeight);
+        horizontalTrack.style.transform = `translateX(-${progress * 200}vw)`;
+      } else if (scrollTop < secTop) {
+        horizontalTrack.style.transform = 'translateX(0vw)';
+      } else if (scrollTop > (secTop + secHeight - viewportHeight)) {
+        horizontalTrack.style.transform = 'translateX(-200vw)';
+      }
+    }
   }
 
   // Bind passive listener for optimal scrolling FPS
