@@ -325,8 +325,8 @@ document.querySelectorAll('.cta-primary').forEach(btn => {
     const p2 = getDotCenter(dot2);
     const p3 = getDotCenter(dot3);
 
-    // Start at top center
-    const xStart = w / 2;
+    // Start at top left rail
+    const xStart = w > 768 ? 60 : 25;
     const yStart = 0;
     const yEnd   = h;
 
@@ -344,13 +344,14 @@ document.querySelectorAll('.cta-primary').forEach(btn => {
     const curve2    = sCurve(p1.x, p1.y, p2.x, p2.y);
     const curve3    = sCurve(p2.x, p2.y, p3.x, p3.y);
 
-    // Dynamic loop at bottom scaled to width
+    // Dynamic loop at bottom transitioning from left rail to center screen
     const hDiff = yEnd - p3.y;
-    const loopWidth = Math.min(100, w * 0.25);
+    const xCenter = w / 2;
+    const loopWidth = Math.min(120, w * 0.25);
     const loop = `
-      C ${p3.x} ${p3.y + hDiff * 0.2}, ${xStart - loopWidth} ${p3.y + hDiff * 0.15}, ${xStart - loopWidth} ${p3.y + hDiff * 0.4}
-      C ${xStart - loopWidth} ${p3.y + hDiff * 0.65}, ${xStart + loopWidth} ${p3.y + hDiff * 0.55}, ${xStart + loopWidth} ${p3.y + hDiff * 0.75}
-      C ${xStart + loopWidth} ${p3.y + hDiff * 0.9}, ${xStart} ${p3.y + hDiff * 0.9}, ${xStart} ${yEnd}
+      C ${p3.x} ${p3.y + hDiff * 0.25}, ${xCenter - loopWidth} ${p3.y + hDiff * 0.2}, ${xCenter - loopWidth} ${p3.y + hDiff * 0.5}
+      C ${xCenter - loopWidth} ${p3.y + hDiff * 0.75}, ${xCenter + loopWidth} ${p3.y + hDiff * 0.65}, ${xCenter + loopWidth} ${p3.y + hDiff * 0.8}
+      C ${xCenter + loopWidth} ${p3.y + hDiff * 0.95}, ${xCenter} ${p3.y + hDiff * 0.95}, ${xCenter} ${yEnd}
     `;
 
     const d = `${pathStart} ${curve1} ${curve2} ${curve3} ${loop}`;

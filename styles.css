@@ -828,14 +828,14 @@ body.gate-active { overflow: hidden; }
 /* Each row wraps [rail col] + [card col] */
 .timeline-row {
   display: grid;
-  grid-template-columns: 1fr 120px 1fr;
+  grid-template-columns: 120px 1fr;
   align-items: center;
   position: relative;
 }
 
 /* Dot on the rail at entry point */
 .timeline-dot-anchor {
-  grid-column: 2;
+  grid-column: 1;
   justify-self: center;
   align-self: center;
   width: 22px; height: 22px;
@@ -851,9 +851,9 @@ body.gate-active { overflow: hidden; }
   background: #ffffff;
   box-shadow: 0 0 16px var(--g), 0 0 5px #fff;
 }
-#node-vision .timeline-dot-anchor { transform: translateX(-35px); }
-#node-domains .timeline-dot-anchor { transform: translateX(35px); }
-#node-activities .timeline-dot-anchor { transform: translateX(-35px); }
+#node-vision .timeline-dot-anchor { transform: translateX(-25px); }
+#node-domains .timeline-dot-anchor { transform: translateX(25px); }
+#node-activities .timeline-dot-anchor { transform: translateX(-25px); }
 
 /* Animated horizontal connector line from rail dot to card */
 .timeline-connector {
@@ -868,25 +868,28 @@ body.gate-active { overflow: hidden; }
 }
 #node-vision .timeline-connector,
 #node-activities .timeline-connector {
-  left: calc(50% - 35px);
+  left: 35px;
   right: auto;
   width: 0;
   background: none;
 }
 #node-domains .timeline-connector {
-  right: calc(50% - 35px);
-  left: auto;
+  left: 85px;
+  right: auto;
   width: 0;
   background: none;
 }
 #node-vision.node-active .timeline-connector,
-#node-activities.node-active .timeline-connector,
+#node-activities.node-active .timeline-connector {
+  width: 85px;
+}
 #node-domains.node-active .timeline-connector {
-  width: 95px;
+  width: 35px;
 }
 
 /* Card wrapper */
 .timeline-card-wrapper {
+  grid-column: 2;
   background: rgba(8,15,8,.72);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -901,13 +904,6 @@ body.gate-active { overflow: hidden; }
     opacity .6s var(--ease);
   opacity: 0;
   transform: translateY(40px) scale(.985);
-}
-#node-vision .timeline-card-wrapper,
-#node-activities .timeline-card-wrapper {
-  grid-column: 3;
-}
-#node-domains .timeline-card-wrapper {
-  grid-column: 1;
 }
 .timeline-card-wrapper.active {
   opacity: 1;
@@ -1430,24 +1426,24 @@ body.gate-active { overflow: hidden; }
   .timeline-row {
     grid-template-columns: 1fr;
     display: block;
-    padding-left: 60px;
+    padding-left: 50px;
   }
   .timeline-dot-anchor {
     display: block;
     grid-column: auto;
     position: absolute;
-    left: 30px;
+    left: 25px;
     top: 50%;
-    transform: translateY(-50%) translateX(-10px);
+    transform: translateY(-50%) translateX(-8px);
   }
   #node-vision .timeline-dot-anchor {
-    transform: translateY(-50%) translateX(-10px);
+    transform: translateY(-50%) translateX(-8px);
   }
   #node-domains .timeline-dot-anchor {
-    transform: translateY(-50%) translateX(10px);
+    transform: translateY(-50%) translateX(8px);
   }
   #node-activities .timeline-dot-anchor {
-    transform: translateY(-50%) translateX(-10px);
+    transform: translateY(-50%) translateX(-8px);
   }
   .timeline-connector {
     display: block;
@@ -1455,21 +1451,21 @@ body.gate-active { overflow: hidden; }
   }
   #node-vision .timeline-connector,
   #node-activities .timeline-connector {
-    left: 20px;
+    left: 17px;
     right: auto;
     width: 0;
   }
   #node-domains .timeline-connector {
-    left: 40px;
+    left: 33px;
     right: auto;
     width: 0;
   }
   #node-vision.node-active .timeline-connector,
   #node-activities.node-active .timeline-connector {
-    width: 40px;
+    width: 33px;
   }
   #node-domains.node-active .timeline-connector {
-    width: 20px;
+    width: 17px;
   }
   .timeline-card-wrapper {
     grid-column: auto !important;
