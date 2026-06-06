@@ -853,26 +853,15 @@ function injectChatStyles() {
       border-radius: 50px;
       border: 1.5px solid rgba(57,255,20,.35);
       background: linear-gradient(135deg, #0a1f0a 0%, #0f2d0f 60%, #1a3a1a 100%);
-      box-shadow: 0 0 0 0 rgba(57,255,20,.4), 0 8px 32px rgba(0,0,0,.7), inset 0 1px 0 rgba(57,255,20,.08);
+      box-shadow: 0 8px 32px rgba(0,0,0,.7), inset 0 1px 0 rgba(57,255,20,.08);
       cursor: pointer;
       position: relative;
       overflow: hidden;
-      transition: transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s, border-color .3s;
+      transition: box-shadow .3s, border-color .3s;
     }
-    /* animated shimmer sweep */
-    #forge-launcher::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(105deg, transparent 40%, rgba(57,255,20,.08) 50%, transparent 60%);
-      transform: translateX(-100%);
-      transition: transform .5s;
-    }
-    #forge-launcher:hover::before { transform: translateX(100%); }
     #forge-launcher:hover {
-      transform: translateY(-3px) scale(1.03);
-      border-color: rgba(57,255,20,.7);
-      box-shadow: 0 0 0 4px rgba(57,255,20,.12), 0 12px 40px rgba(57,255,20,.2), 0 16px 48px rgba(0,0,0,.6);
+      border-color: rgba(57,255,20,.6);
+      box-shadow: 0 0 0 3px rgba(57,255,20,.1), 0 8px 36px rgba(57,255,20,.18), 0 12px 40px rgba(0,0,0,.6);
     }
     #forge-launcher.forge-launcher-active {
       border-color: #39ff14;
@@ -889,12 +878,8 @@ function injectChatStyles() {
       position: absolute;
       inset: -3px;
       border-radius: 50%;
-      border: 2px solid transparent;
-      border-top-color: #39ff14;
-      border-right-color: rgba(57,255,20,.3);
-      animation: launcherSpin 2.5s linear infinite;
+      border: 2px solid rgba(57,255,20,.3);
     }
-    @keyframes launcherSpin { to { transform: rotate(360deg); } }
     #forge-launcher-img {
       width: 44px;
       height: 44px;
@@ -953,7 +938,6 @@ function injectChatStyles() {
       100% { box-shadow: 0 0 0 0 rgba(57,255,20,0), 0 8px 32px rgba(0,0,0,.6); }
     }
     #forge-launcher.forge-pulse { animation: forgePulse 1.5s ease-out 3; }
-
     /* ── Chat Window ── */
     #forge-chat-window {
       position: fixed;
