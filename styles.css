@@ -939,7 +939,6 @@ body.gate-active { overflow: hidden; }
 /* ═══════════════════════════════════════════════
    VISION — BENTO GRID
    ═══════════════════════════════════════════════ */
-.vision-layout { /* used inside timeline-section-content */ }
 .vision-top { margin-bottom: 0; }
 
 .vision-quote {
@@ -1617,21 +1616,9 @@ body.gate-active { overflow: hidden; }
   margin-bottom: 24px;
 }
 
-/* Connector line vertical alignment fix — center on dot */
-.timeline-connector {
-  top: 80px;
-  margin-top: 1px; /* Micro-alignment */
-}
-
 /* Vision quote left/right lines — responsive */
 @media (max-width: 768px) {
   .vision-quote { margin: 32px 0 40px; }
-}
-
-/* Activities — make last row span full width when 2 cards in a 3-col grid */
-.act-grid .ac-full:nth-last-child(2):nth-child(3n+2),
-.act-grid .ac-full:nth-last-child(1):nth-child(3n+3) {
-  /* No extra span — keep uniform */
 }
 
 /* Join section facts — refined spacing */
