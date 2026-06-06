@@ -648,7 +648,6 @@ body:has(a:hover) .cursor-trail { width: 48px; height: 48px; border-color: rgba(
   gap: 72px;
   align-items: center;
 }
-.about-left {}
 .about-body {
   font-family: var(--ff-body);
   font-size: 1.05rem;
