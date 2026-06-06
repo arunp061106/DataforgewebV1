@@ -52,67 +52,59 @@ document.addEventListener('mousemove', e => {
 // ══════════════════════════════════════════════
 const canvas = document.getElementById('matrixCanvas');
 const ctx    = canvas.getContext('2d');
-let W, H, columns = [];
-const CHARS = 'DATAFORGEANALYTICSML01ΨΩΔΛαβδεζη∑∞∂∫√π';
-
-function resetColumn(col) {
-  col.x          = Math.random() * W;
-  col.y          = -Math.random() * 20;
-  col.depth      = 0.1 + Math.random() * 0.9;
-  col.fontSize   = Math.floor(8 + col.depth * 9);
-  col.speed      = 0.35 + col.depth * 1.45;
-  col.opacity    = 0.15 + col.depth * 0.85;
-  col.trailLen   = Math.floor(10 + col.depth * 18);
-  col.glow       = col.depth > 0.72;
-  col.chars      = Array.from({ length: 40 }, () =>
-    CHARS[Math.floor(Math.random() * CHARS.length)]);
-}
+const CHARS  = '01アイウエオカキクケコサシスセソタチツテトナニヌネノ';
+const fontSize = 16;
+let W, H, yPositions = [], frameSkips = [], currentFrames = [];
+let matrixAnimId;
 
 function initMatrix() {
   W = canvas.width  = window.innerWidth;
   H = canvas.height = window.innerHeight;
-  columns = [];
-  const count = Math.floor(W / 12);
-  for (let i = 0; i < count; i++) {
-    const col = {};
-    resetColumn(col);
-    col.y = Math.random() * (H / col.fontSize);
-    columns.push(col);
-  }
+  const count = Math.floor(W / fontSize) + 1;
+  yPositions = Array(count).fill(0).map(() => Math.random() * H);
+  frameSkips = Array(count).fill(0).map(() => Math.floor(Math.random() * 3) + 1);
+  currentFrames = Array(count).fill(0);
 }
 initMatrix();
 window.addEventListener('resize', initMatrix, { passive: true });
 
 function drawMatrix() {
-  ctx.clearRect(0, 0, W, H);
-  for (const col of columns) {
-    for (let j = 0; j < col.trailLen; j++) {
-      const yGrid  = Math.floor(col.y) - j;
-      if (yGrid < 0) continue;
-      const yPx = yGrid * col.fontSize;
-      if (yPx > H + col.fontSize) continue;
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+  ctx.fillRect(0, 0, W, H);
+  ctx.font = `bold ${fontSize}px 'Space Mono', monospace`;
+  
+  for (let i = 0; i < yPositions.length; i++) {
+    currentFrames[i]++;
+    if (currentFrames[i] < frameSkips[i]) continue;
+    currentFrames[i] = 0;
 
-      const tFactor = 1 - j / col.trailLen;
-      const alpha   = tFactor * col.opacity;
-      ctx.font = `bold ${col.fontSize}px 'Space Mono', monospace`;
+    const char = CHARS[Math.floor(Math.random() * CHARS.length)];
+    const x = i * fontSize;
+    const y = yPositions[i];
 
-      if (j === 0) {
-        ctx.fillStyle  = `rgba(220,255,230,${col.opacity})`;
-        ctx.shadowColor = '#00ff66';
-        ctx.shadowBlur  = col.glow ? 12 : 0;
-      } else {
-        ctx.fillStyle = `rgba(0,255,102,${alpha})`;
-        ctx.shadowBlur = 0;
-      }
-      ctx.fillText(col.chars[yGrid % col.chars.length], col.x, yPx);
+    ctx.fillStyle = 'rgba(0, 255, 65, 0.85)';
+    ctx.fillText(char, x, y - fontSize);
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(char, x, y);
+
+    yPositions[i] += fontSize;
+    if (yPositions[i] > H && Math.random() > 0.975) {
+      yPositions[i] = 0;
+      frameSkips[i] = Math.floor(Math.random() * 3) + 1;
     }
-    col.y += col.speed;
-    if ((col.y - col.trailLen) * col.fontSize > H) resetColumn(col);
   }
-  ctx.shadowBlur = 0;
-  requestAnimationFrame(drawMatrix);
+  matrixAnimId = requestAnimationFrame(drawMatrix);
 }
 drawMatrix();
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    cancelAnimationFrame(matrixAnimId);
+  } else {
+    drawMatrix();
+  }
+});
 
 
 // ══════════════════════════════════════════════
@@ -120,14 +112,24 @@ drawMatrix();
 // ══════════════════════════════════════════════
 const navbar     = document.getElementById('navbar');
 const navAnchors = document.querySelectorAll('.nav-menu a:not(.nav-btn)');
+let lastScrollY = window.scrollY;
 
 window.addEventListener('scroll', () => {
-  navbar.classList.toggle('stuck', window.scrollY > 50);
+  const currentScrollY = window.scrollY;
+  
+  if (currentScrollY > 80 && currentScrollY > lastScrollY) {
+    navbar.classList.add('nav-hidden');
+  } else {
+    navbar.classList.remove('nav-hidden');
+  }
+  
+  navbar.classList.toggle('scrolled', currentScrollY > 50);
+  lastScrollY = currentScrollY;
 
   // Highlight active section link
   let current = '';
   document.querySelectorAll('section[id], div[id]').forEach(sec => {
-    if (window.scrollY >= sec.offsetTop - 140) current = sec.id;
+    if (currentScrollY >= sec.offsetTop - 140) current = sec.id;
   });
   navAnchors.forEach(a => {
     a.style.color = a.getAttribute('href') === `#${current}` ? 'var(--g)' : '';
@@ -181,7 +183,7 @@ setTimeout(typeTerminal, 1200);
 // 6. UNIVERSAL SCROLL REVEAL
 // ══════════════════════════════════════════════
 const revealEls = document.querySelectorAll(
-  '.reveal-up, .reveal-left, .reveal-right, .reveal-bento'
+  '.reveal-up, .reveal-left, .reveal-right, .reveal-bento, .scroll-section'
 );
 
 // Stagger delays for grid children
@@ -191,6 +193,8 @@ document.querySelectorAll('.obj-bento .bento-card').forEach((el, i) => {
 document.querySelectorAll('.act-grid .act-card').forEach((el, i) => {
   el.dataset.delay = (i * 0.08).toFixed(2);
 });
+
+const scrollSections = document.querySelectorAll('.scroll-section');
 
 const revealObs = new IntersectionObserver(entries => {
   entries.forEach(e => {
@@ -202,6 +206,7 @@ const revealObs = new IntersectionObserver(entries => {
 }, { threshold: 0.07, rootMargin: '0px 0px -24px 0px' });
 
 revealEls.forEach(el => revealObs.observe(el));
+scrollSections.forEach(el => revealObs.observe(el));
 
 
 // ══════════════════════════════════════════════
@@ -284,86 +289,25 @@ document.querySelectorAll('.cta-primary').forEach(btn => {
 // 10. SCROLL-LINKED SYSTEM
 //     • Grid scanner line (full page)
 //     • Ambient glow parallax
-//     • Rail timeline progress + dot
-//     • Timeline node activation + connector lines
-//     • Rail canvas matrix rain
+//     • Global waypoint timeline progress
 // ══════════════════════════════════════════════
 (function () {
-
   /* ── Elements ───────────────────────────── */
-  const gridScanner    = document.querySelector('.scroll-grid-scanner');
-  const ball1          = document.querySelector('.ball-1');
-  const ball2          = document.querySelector('.ball-2');
-  const ball3          = document.querySelector('.ball-3');
-  const timelineSec    = document.getElementById('features-timeline-section');
-  const bgPath         = document.getElementById('timelineTrackBg');
-  const activePath     = document.getElementById('timelineTrackActive');
-  const railGlowDot    = document.getElementById('railGlowDot');
-  const timelineRows   = document.querySelectorAll('.timeline-row');
-  const dot1           = document.querySelector('#node-vision .timeline-dot-anchor');
-  const dot2           = document.querySelector('#node-domains .timeline-dot-anchor');
-  const dot3           = document.querySelector('#node-activities .timeline-dot-anchor');
+  const gridScanner = document.querySelector('.scroll-grid-scanner');
+  const ball1       = document.querySelector('.ball-1');
+  const ball2       = document.querySelector('.ball-2');
+  const ball3       = document.querySelector('.ball-3');
+  
+  const globalTimelineSecs = ['hero', 'about', 'vision', 'domains', 'activities', 'join'];
+  const dots = document.querySelectorAll('.global-scroll-timeline .timeline-dot');
+  const activeTrack = document.getElementById('globalActiveTrack');
+  let pathLength = 0;
 
-  /* ── Winding Path Generator ─────────────── */
-  function updateTimelinePath() {
-    if (!timelineSec || !bgPath || !activePath || !dot1 || !dot2 || !dot3) return;
-
-    const containerRect = timelineSec.getBoundingClientRect();
-    const w = containerRect.width;
-    const h = containerRect.height;
-
-    // Helper to get center coordinates of a dot relative to timeline section
-    function getDotCenter(dot) {
-      const rect = dot.getBoundingClientRect();
-      return {
-        x: rect.left - containerRect.left + rect.width / 2,
-        y: rect.top - containerRect.top + rect.height / 2
-      };
-    }
-
-    const p1 = getDotCenter(dot1);
-    const p2 = getDotCenter(dot2);
-    const p3 = getDotCenter(dot3);
-
-    // Start at top left rail
-    const xStart = w > 768 ? 60 : 25;
-    const yStart = 0;
-    const yEnd   = h;
-
-    // Helper for s-curve path calculation
-    function sCurve(xA, yA, xB, yB) {
-      const dy = yB - yA;
-      const cp1y = yA + dy * 0.45;
-      const cp2y = yB - dy * 0.45;
-      return `C ${xA} ${cp1y}, ${xB} ${cp2y}, ${xB} ${yB}`;
-    }
-
-    // Generate path
-    const pathStart = `M ${xStart} ${yStart}`;
-    const curve1    = sCurve(xStart, yStart, p1.x, p1.y);
-    const curve2    = sCurve(p1.x, p1.y, p2.x, p2.y);
-    const curve3    = sCurve(p2.x, p2.y, p3.x, p3.y);
-
-    // Dynamic loop at bottom transitioning from left rail to center screen
-    const hDiff = yEnd - p3.y;
-    const xCenter = w / 2;
-    const loopWidth = Math.min(120, w * 0.25);
-    const loop = `
-      C ${p3.x} ${p3.y + hDiff * 0.25}, ${xCenter - loopWidth} ${p3.y + hDiff * 0.2}, ${xCenter - loopWidth} ${p3.y + hDiff * 0.5}
-      C ${xCenter - loopWidth} ${p3.y + hDiff * 0.75}, ${xCenter + loopWidth} ${p3.y + hDiff * 0.65}, ${xCenter + loopWidth} ${p3.y + hDiff * 0.8}
-      C ${xCenter + loopWidth} ${p3.y + hDiff * 0.95}, ${xCenter} ${p3.y + hDiff * 0.95}, ${xCenter} ${yEnd}
-    `;
-
-    const d = `${pathStart} ${curve1} ${curve2} ${curve3} ${loop}`;
-    bgPath.setAttribute('d', d);
-    activePath.setAttribute('d', d);
-
-    // Update active path dash offset bounds
-    const pathLength = activePath.getTotalLength();
-    activePath.style.strokeDasharray = pathLength;
+  if (activeTrack) {
+    pathLength = activeTrack.getTotalLength();
+    activeTrack.style.strokeDasharray = pathLength;
+    activeTrack.style.strokeDashoffset = pathLength;
   }
-
-  window.addEventListener('resize', updateTimelinePath, { passive: true });
 
   /* ── Scroll handler ─────────────────────── */
   function onScroll() {
@@ -380,58 +324,40 @@ document.querySelectorAll('.cta-primary').forEach(btn => {
     if (ball2) ball2.style.transform = `translate(${pct*-140}px,${pct*110}px) scale(${1-pct*.15})`;
     if (ball3) ball3.style.transform = `translate(${pct*80}px,${pct*140}px) scale(${1+pct*.3})`;
 
-    // 3. Winding rail progress line + glow dot
-    if (timelineSec && activePath && railGlowDot) {
-      const secTop    = timelineSec.offsetTop;
-      const secHeight = timelineSec.offsetHeight;
-      const vh        = window.innerHeight;
-      const start     = secTop - vh * 0.55;
-      const end       = secTop + secHeight - vh * 0.4;
-
-      let progress = 0;
-      if (scrollTop >= start && scrollTop <= end) {
-        progress = (scrollTop - start) / (end - start);
-      } else if (scrollTop > end) {
-        progress = 1;
-      }
-      progress = Math.min(1, Math.max(0, progress));
-
-      const pathLength = activePath.getTotalLength();
-      activePath.style.strokeDashoffset = pathLength * (1 - progress);
-
-      if (pathLength > 0) {
-        const point = activePath.getPointAtLength(progress * pathLength);
-        railGlowDot.style.left = `${point.x}px`;
-        railGlowDot.style.top  = `${point.y}px`;
+    // 3. Global waypoint timeline progress
+    if (activeTrack && dots.length > 0) {
+      let currentIdx = -1;
+      
+      globalTimelineSecs.forEach((secId, i) => {
+        const sec = document.getElementById(secId);
+        if (!sec) return;
+        const rect = sec.getBoundingClientRect();
+        // Highlight if top of section is above the middle of screen
+        if (rect.top <= window.innerHeight * 0.5) {
+          currentIdx = i;
+        }
+      });
+      
+      dots.forEach((dot, i) => {
+        if (i <= currentIdx) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+      
+      if (currentIdx >= 0) {
+        const targetDot = dots[currentIdx];
+        const dotTop = parseInt(targetDot.style.top); // e.g. 50px
+        const trackHeight = 700; // 750 - 50
+        const progress = (dotTop - 50) / trackHeight;
+        activeTrack.style.strokeDashoffset = pathLength * (1 - progress);
+      } else {
+        activeTrack.style.strokeDashoffset = pathLength;
       }
     }
-
-    // 4. Activate timeline rows + connector lines
-    timelineRows.forEach(row => {
-      const card = row.querySelector('.timeline-card-wrapper');
-      if (!card) return;
-      const top   = card.getBoundingClientRect().top;
-      const trigger = window.innerHeight * 0.80;
-      if (top < trigger) {
-        row.classList.add('node-active');
-        card.classList.add('active');
-      } else {
-        row.classList.remove('node-active');
-        card.classList.remove('active');
-      }
-    });
   }
 
   window.addEventListener('scroll', onScroll, { passive: true });
-
-  /* ── Init ───────────────────────────────── */
-  setTimeout(() => {
-    updateTimelinePath();
-    onScroll();
-  }, 150);
-
-  // Re-check layout after images/styles load
-  setTimeout(updateTimelinePath, 700);
-  setTimeout(updateTimelinePath, 1800);
-
+  setTimeout(onScroll, 150);
 })();

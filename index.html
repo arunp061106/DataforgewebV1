@@ -44,6 +44,20 @@
     <div class="ball ball-3"></div>
   </div>
 
+  <!-- Global timeline overlay -->
+  <div class="global-scroll-timeline" aria-hidden="true">
+    <svg id="globalTimelineSvg" viewBox="0 0 40 800" preserveAspectRatio="none">
+      <line x1="20" y1="50" x2="20" y2="750" class="track-bg" />
+      <path id="globalActiveTrack" d="M 20 50 L 20 750" fill="none" />
+    </svg>
+    <div class="timeline-dot" data-sec="hero" style="top: 50px;"></div>
+    <div class="timeline-dot" data-sec="about" style="top: 190px;"></div>
+    <div class="timeline-dot" data-sec="vision" style="top: 330px;"></div>
+    <div class="timeline-dot" data-sec="domains" style="top: 470px;"></div>
+    <div class="timeline-dot" data-sec="activities" style="top: 610px;"></div>
+    <div class="timeline-dot" data-sec="join" style="top: 750px;"></div>
+  </div>
+
   <!-- ── NAV ────────────────────────────────── -->
   <nav id="navbar">
     <div class="nav-wrap">
@@ -65,7 +79,7 @@
   </nav>
 
   <!-- ── HERO ───────────────────────────────── -->
-  <section id="hero">
+  <section id="hero" class="scroll-section">
 
     <!-- Corner institution badges -->
     <div class="corner-badge corner-tl" id="badge-srm">
@@ -169,7 +183,7 @@
   </div>
 
   <!-- ── ABOUT ──────────────────────────────── -->
-  <section id="about" class="section">
+  <section id="about" class="section scroll-section">
     <div class="about-layout">
 
       <!-- Left: big statement -->
@@ -217,245 +231,198 @@
     </div>
   </section>
 
-  <!-- ── TIMELINE SECTION (Vision + Domains + Activities) ── -->
-  <div id="features-timeline-section">
-
-    <!-- Background ambience -->
-    <div class="timeline-bg-glow glow-1" aria-hidden="true"></div>
-    <div class="timeline-bg-glow glow-2" aria-hidden="true"></div>
-
-    <!-- Winding SVG Timeline Rail -->
-    <div class="timeline-svg-container" aria-hidden="true">
-      <svg id="timelineSvg">
-        <defs>
-          <linearGradient id="timelineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="var(--g)" />
-            <stop offset="100%" stop-color="var(--cyan)" />
-          </linearGradient>
-        </defs>
-        <!-- Background path (dim green/cyan) -->
-        <path id="timelineTrackBg" fill="none" />
-        <!-- Active path (bright animated glow) -->
-        <path id="timelineTrackActive" fill="none" />
-      </svg>
-      <!-- Glowing active dot following the curve -->
-      <div class="rail-glow-dot" id="railGlowDot"></div>
+  <!-- ── VISION ─────────────────── -->
+  <section id="vision" class="section scroll-section container">
+    <div class="vision-top reveal-up">
+      <div class="section-tag">// vision &amp; objectives</div>
+      <h2 class="section-h2 center-h2">Built to <span class="accent-fill">Empower</span></h2>
     </div>
 
-    <!-- Content wrapper -->
-    <div class="timeline-content-wrap container">
+    <div class="vision-quote reveal-up">
+      <div class="quote-line"></div>
+      <blockquote>
+        "To foster data-driven thinking, analytical innovation, and
+        industry-ready skills — preparing B.Tech students to thrive
+        in an increasingly data-powered world."
+      </blockquote>
+      <div class="quote-line"></div>
+    </div>
 
-      <!-- ── NODE 1 : VISION ─────────────────── -->
-      <div class="timeline-row" id="node-vision">
-        <div class="timeline-connector"></div>
-        <div class="timeline-dot-anchor"></div>
-        <div class="timeline-card-wrapper">
-          <div id="vision" class="timeline-section-content">
+    <div class="obj-bento" id="objBento">
+      <div class="bento-card bento-wide reveal-bento" id="bento-1">
+        <div class="bento-num">01</div>
+        <div class="bento-icon">📐</div>
+        <h3>Core Foundations</h3>
+        <p>Data Science &amp; Statistics fundamentals with hands-on practice.</p>
+      </div>
+      <div class="bento-card reveal-bento" id="bento-2">
+        <div class="bento-num">02</div>
+        <div class="bento-icon">📊</div>
+        <h3>Data Analytics</h3>
+        <p>Visualization &amp; analytics tool mastery.</p>
+      </div>
+      <div class="bento-card reveal-bento" id="bento-3">
+        <div class="bento-num">03</div>
+        <div class="bento-icon">💼</div>
+        <h3>Business Thinking</h3>
+        <p>Real-world decision making with data.</p>
+      </div>
+      <div class="bento-card reveal-bento" id="bento-4">
+        <div class="bento-num">04</div>
+        <div class="bento-icon">🌐</div>
+        <h3>Big Data Tech</h3>
+        <p>Industry frameworks &amp; large-scale systems.</p>
+      </div>
+      <div class="bento-card bento-tall reveal-bento" id="bento-5">
+        <div class="bento-num">05</div>
+        <div class="bento-icon">🔬</div>
+        <h3>Research</h3>
+        <p>Publications in data-related fields &amp; journals.</p>
+      </div>
+      <div class="bento-card reveal-bento" id="bento-6">
+        <div class="bento-num">06</div>
+        <div class="bento-icon">🤝</div>
+        <h3>Industry Connect</h3>
+        <p>Professionals, analytics firms &amp; startups.</p>
+      </div>
+      <div class="bento-card reveal-bento" id="bento-7">
+        <div class="bento-num">07</div>
+        <div class="bento-icon">🏆</div>
+        <h3>Events &amp; Datathons</h3>
+        <p>Workshops, bootcamps &amp; competitions.</p>
+      </div>
+      <div class="bento-card bento-wide reveal-bento" id="bento-8">
+        <div class="bento-num">08</div>
+        <div class="bento-icon">🌍</div>
+        <h3>Real-World Impact</h3>
+        <p>Data solutions for business and societal problems at scale.</p>
+      </div>
+    </div>
+  </section>
 
-            <div class="vision-top reveal-up">
-              <div class="section-tag">// vision &amp; objectives</div>
-              <h2 class="section-h2 center-h2">Built to <span class="accent-fill">Empower</span></h2>
-            </div>
+  <!-- ── DOMAINS ────────────────── -->
+  <section id="domains" class="section scroll-section container">
+    <div class="section-tag reveal-up">// who can join?</div>
+    <h2 class="section-h2 reveal-up">Data Science <span class="accent-fill">Applies</span><br/>Everywhere</h2>
+    <p class="section-sub reveal-up">Every branch. Every year. Here's how your field connects.</p>
 
-            <div class="vision-quote reveal-up">
-              <div class="quote-line"></div>
-              <blockquote>
-                "To foster data-driven thinking, analytical innovation, and
-                industry-ready skills — preparing B.Tech students to thrive
-                in an increasingly data-powered world."
-              </blockquote>
-              <div class="quote-line"></div>
-            </div>
-
-            <div class="obj-bento" id="objBento">
-              <div class="bento-card bento-wide reveal-bento" id="bento-1">
-                <div class="bento-num">01</div>
-                <div class="bento-icon">📐</div>
-                <h3>Core Foundations</h3>
-                <p>Data Science &amp; Statistics fundamentals with hands-on practice.</p>
-              </div>
-              <div class="bento-card reveal-bento" id="bento-2">
-                <div class="bento-num">02</div>
-                <div class="bento-icon">📊</div>
-                <h3>Data Analytics</h3>
-                <p>Visualization &amp; analytics tool mastery.</p>
-              </div>
-              <div class="bento-card reveal-bento" id="bento-3">
-                <div class="bento-num">03</div>
-                <div class="bento-icon">💼</div>
-                <h3>Business Thinking</h3>
-                <p>Real-world decision making with data.</p>
-              </div>
-              <div class="bento-card reveal-bento" id="bento-4">
-                <div class="bento-num">04</div>
-                <div class="bento-icon">🌐</div>
-                <h3>Big Data Tech</h3>
-                <p>Industry frameworks &amp; large-scale systems.</p>
-              </div>
-              <div class="bento-card bento-tall reveal-bento" id="bento-5">
-                <div class="bento-num">05</div>
-                <div class="bento-icon">🔬</div>
-                <h3>Research</h3>
-                <p>Publications in data-related fields &amp; journals.</p>
-              </div>
-              <div class="bento-card reveal-bento" id="bento-6">
-                <div class="bento-num">06</div>
-                <div class="bento-icon">🤝</div>
-                <h3>Industry Connect</h3>
-                <p>Professionals, analytics firms &amp; startups.</p>
-              </div>
-              <div class="bento-card reveal-bento" id="bento-7">
-                <div class="bento-num">07</div>
-                <div class="bento-icon">🏆</div>
-                <h3>Events &amp; Datathons</h3>
-                <p>Workshops, bootcamps &amp; competitions.</p>
-              </div>
-              <div class="bento-card bento-wide reveal-bento" id="bento-8">
-                <div class="bento-num">08</div>
-                <div class="bento-icon">🌍</div>
-                <h3>Real-World Impact</h3>
-                <p>Data solutions for business and societal problems at scale.</p>
-              </div>
-            </div>
-
-          </div>
+    <div class="carousel-nav" id="domainsNav">
+      <button class="carousel-btn btn-prev" aria-label="Previous">←</button>
+      <button class="carousel-btn btn-next" aria-label="Next">→</button>
+    </div>
+    
+    <div class="domains-scroll-wrap" id="domainsScroll">
+      <div class="domain-track" id="domainTrack">
+        <div class="dcard" id="dcard-cs">
+          <div class="dcard-num">01</div>
+          <div class="dcard-icon">💻</div>
+          <h3>Computer Science</h3>
+          <p>ML pipelines, data engineering, AI systems</p>
+          <div class="dcard-tags"><span>Python</span><span>TensorFlow</span><span>Spark</span></div>
         </div>
-      </div><!-- /node-vision -->
-
-      <!-- ── NODE 2 : DOMAINS ────────────────── -->
-      <div class="timeline-row" id="node-domains">
-        <div class="timeline-connector"></div>
-        <div class="timeline-dot-anchor"></div>
-        <div class="timeline-card-wrapper">
-          <div id="domains" class="timeline-section-content">
-
-            <div class="section-tag reveal-up">// who can join?</div>
-            <h2 class="section-h2 reveal-up">Data Science <span class="accent-fill">Applies</span><br/>Everywhere</h2>
-            <p class="section-sub reveal-up">Every branch. Every year. Here's how your field connects.</p>
-
-            <div class="domains-scroll-wrap" id="domainsScroll">
-              <div class="domain-track" id="domainTrack">
-                <div class="dcard" id="dcard-cs">
-                  <div class="dcard-num">01</div>
-                  <div class="dcard-icon">💻</div>
-                  <h3>Computer Science</h3>
-                  <p>ML pipelines, data engineering, AI systems</p>
-                  <div class="dcard-tags"><span>Python</span><span>TensorFlow</span><span>Spark</span></div>
-                </div>
-                <div class="dcard" id="dcard-ec">
-                  <div class="dcard-num">02</div>
-                  <div class="dcard-icon">📡</div>
-                  <h3>Electronics</h3>
-                  <p>Sensor data, signal processing, IoT analytics</p>
-                  <div class="dcard-tags"><span>MATLAB</span><span>NumPy</span><span>IoT</span></div>
-                </div>
-                <div class="dcard" id="dcard-mech">
-                  <div class="dcard-num">03</div>
-                  <div class="dcard-icon">⚙️</div>
-                  <h3>Mechanical</h3>
-                  <p>Predictive maintenance, manufacturing analytics</p>
-                  <div class="dcard-tags"><span>Pandas</span><span>Tableau</span></div>
-                </div>
-                <div class="dcard" id="dcard-civil">
-                  <div class="dcard-num">04</div>
-                  <div class="dcard-icon">🏗️</div>
-                  <h3>Civil Engineering</h3>
-                  <p>Infrastructure data, smart city analytics</p>
-                  <div class="dcard-tags"><span>GIS</span><span>Power BI</span></div>
-                </div>
-                <div class="dcard" id="dcard-biz">
-                  <div class="dcard-num">05</div>
-                  <div class="dcard-icon">📈</div>
-                  <h3>Business</h3>
-                  <p>Market analytics, consumer behaviour</p>
-                  <div class="dcard-tags"><span>Excel</span><span>SQL</span><span>Power BI</span></div>
-                </div>
-                <div class="dcard" id="dcard-health">
-                  <div class="dcard-num">06</div>
-                  <div class="dcard-icon">🏥</div>
-                  <h3>Healthcare Tech</h3>
-                  <p>Patient analytics, clinical decision support</p>
-                  <div class="dcard-tags"><span>R</span><span>SPSS</span><span>Python</span></div>
-                </div>
-                <div class="dcard" id="dcard-fin">
-                  <div class="dcard-num">07</div>
-                  <div class="dcard-icon">💹</div>
-                  <h3>Finance</h3>
-                  <p>Risk analytics, algorithmic trading data</p>
-                  <div class="dcard-tags"><span>R</span><span>Python</span><span>Excel</span></div>
-                </div>
-              </div>
-            </div>
-            <p class="scroll-hint-text reveal-up">← Drag to explore →</p>
-
-          </div>
+        <div class="dcard" id="dcard-ec">
+          <div class="dcard-num">02</div>
+          <div class="dcard-icon">📡</div>
+          <h3>Electronics</h3>
+          <p>Sensor data, signal processing, IoT analytics</p>
+          <div class="dcard-tags"><span>MATLAB</span><span>NumPy</span><span>IoT</span></div>
         </div>
-      </div><!-- /node-domains -->
-
-      <!-- ── NODE 3 : ACTIVITIES ─────────────── -->
-      <div class="timeline-row" id="node-activities">
-        <div class="timeline-connector"></div>
-        <div class="timeline-dot-anchor"></div>
-        <div class="timeline-card-wrapper">
-          <div id="activities" class="timeline-section-content">
-
-            <div class="section-tag reveal-up">// what we do</div>
-            <h2 class="section-h2 reveal-up">Learning <span class="accent-fill">Activities</span></h2>
-
-            <div class="act-grid" id="actGrid">
-              <div class="act-card ac-featured reveal-bento" id="act-1">
-                <div class="act-num">01</div>
-                <div class="act-icon-wrap">📅</div>
-                <h3>Dataset of the Month</h3>
-                <p>Members pick a public dataset and present compelling findings every month — turning raw numbers into powerful stories.</p>
-                <span class="act-freq">Monthly</span>
-              </div>
-              <div class="act-card reveal-bento" id="act-2">
-                <div class="act-num">02</div>
-                <div class="act-icon-wrap">📖</div>
-                <h3>Research Paper Circle</h3>
-                <p>Decode cutting-edge papers in data science and ML together.</p>
-                <span class="act-freq">Weekly</span>
-              </div>
-              <div class="act-card reveal-bento" id="act-3">
-                <div class="act-num">03</div>
-                <div class="act-icon-wrap">💼</div>
-                <h3>Business Case Analysis</h3>
-                <p>Real-world cases solved with data — like mini consulting sessions.</p>
-                <span class="act-freq">Bi-Weekly</span>
-              </div>
-              <div class="act-card reveal-bento" id="act-4">
-                <div class="act-num">04</div>
-                <div class="act-icon-wrap">🧩</div>
-                <h3>Analytics Challenges</h3>
-                <p>Gamified puzzles sharpening analytical speed and precision.</p>
-                <span class="act-freq">Weekly</span>
-              </div>
-              <div class="act-card ac-full reveal-bento" id="act-5">
-                <div class="act-num">05</div>
-                <div class="act-icon-wrap">🛠️</div>
-                <h3>Workshops &amp; Bootcamps</h3>
-                <p>Intensive hands-on sessions — Python, SQL, Power BI, Tableau and beyond. Industry-grade skills delivered on campus.</p>
-                <span class="act-freq">Seasonal</span>
-              </div>
-              <div class="act-card ac-full reveal-bento" id="act-6">
-                <div class="act-num">06</div>
-                <div class="act-icon-wrap">⚡</div>
-                <h3>Datathons &amp; Competitions</h3>
-                <p>Hackathon-style competitions. Real problems. Time pressure. Real impact. Build solutions that matter under the clock.</p>
-                <span class="act-freq">Semester</span>
-              </div>
-            </div>
-
-          </div>
+        <div class="dcard" id="dcard-mech">
+          <div class="dcard-num">03</div>
+          <div class="dcard-icon">⚙️</div>
+          <h3>Mechanical</h3>
+          <p>Predictive maintenance, manufacturing analytics</p>
+          <div class="dcard-tags"><span>Pandas</span><span>Tableau</span></div>
         </div>
-      </div><!-- /node-activities -->
+        <div class="dcard" id="dcard-civil">
+          <div class="dcard-num">04</div>
+          <div class="dcard-icon">🏗️</div>
+          <h3>Civil Engineering</h3>
+          <p>Infrastructure data, smart city analytics</p>
+          <div class="dcard-tags"><span>GIS</span><span>Power BI</span></div>
+        </div>
+        <div class="dcard" id="dcard-biz">
+          <div class="dcard-num">05</div>
+          <div class="dcard-icon">📈</div>
+          <h3>Business</h3>
+          <p>Market analytics, consumer behaviour</p>
+          <div class="dcard-tags"><span>Excel</span><span>SQL</span><span>Power BI</span></div>
+        </div>
+        <div class="dcard" id="dcard-health">
+          <div class="dcard-num">06</div>
+          <div class="dcard-icon">🏥</div>
+          <h3>Healthcare Tech</h3>
+          <p>Patient analytics, clinical decision support</p>
+          <div class="dcard-tags"><span>R</span><span>SPSS</span><span>Python</span></div>
+        </div>
+        <div class="dcard" id="dcard-fin">
+          <div class="dcard-num">07</div>
+          <div class="dcard-icon">💹</div>
+          <h3>Finance</h3>
+          <p>Risk analytics, algorithmic trading data</p>
+          <div class="dcard-tags"><span>R</span><span>Python</span><span>Excel</span></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="carousel-dots" id="domainsDots"></div>
+    <p class="scroll-hint-text reveal-up">← Drag to explore →</p>
+  </section>
 
-    </div><!-- /timeline-content-wrap -->
-  </div><!-- /features-timeline-section -->
+  <!-- ── ACTIVITIES ─────────────── -->
+  <section id="activities" class="section scroll-section container">
+    <div class="section-tag reveal-up">// what we do</div>
+    <h2 class="section-h2 reveal-up">Learning <span class="accent-fill">Activities</span></h2>
+
+    <div class="act-grid" id="actGrid">
+      <div class="act-card ac-featured reveal-bento" id="act-1">
+        <div class="act-num">01</div>
+        <div class="act-icon-wrap">📅</div>
+        <h3>Dataset of the Month</h3>
+        <p>Members pick a public dataset and present compelling findings every month — turning raw numbers into powerful stories.</p>
+        <span class="act-freq">Monthly</span>
+      </div>
+      <div class="act-card reveal-bento" id="act-2">
+        <div class="act-num">02</div>
+        <div class="act-icon-wrap">📖</div>
+        <h3>Research Paper Circle</h3>
+        <p>Decode cutting-edge papers in data science and ML together.</p>
+        <span class="act-freq">Weekly</span>
+      </div>
+      <div class="act-card reveal-bento" id="act-3">
+        <div class="act-num">03</div>
+        <div class="act-icon-wrap">💼</div>
+        <h3>Business Case Analysis</h3>
+        <p>Real-world cases solved with data — like mini consulting sessions.</p>
+        <span class="act-freq">Bi-Weekly</span>
+      </div>
+      <div class="act-card reveal-bento" id="act-4">
+        <div class="act-num">04</div>
+        <div class="act-icon-wrap">🧩</div>
+        <h3>Analytics Challenges</h3>
+        <p>Gamified puzzles sharpening analytical speed and precision.</p>
+        <span class="act-freq">Weekly</span>
+      </div>
+      <div class="act-card ac-full reveal-bento" id="act-5">
+        <div class="act-num">05</div>
+        <div class="act-icon-wrap">🛠️</div>
+        <h3>Workshops &amp; Bootcamps</h3>
+        <p>Intensive hands-on sessions — Python, SQL, Power BI, Tableau and beyond. Industry-grade skills delivered on campus.</p>
+        <span class="act-freq">Seasonal</span>
+      </div>
+      <div class="act-card ac-full reveal-bento" id="act-6">
+        <div class="act-num">06</div>
+        <div class="act-icon-wrap">⚡</div>
+        <h3>Datathons &amp; Competitions</h3>
+        <p>Hackathon-style competitions. Real problems. Time pressure. Real impact. Build solutions that matter under the clock.</p>
+        <span class="act-freq">Semester</span>
+      </div>
+    </div>
+  </section>
+
 
   <!-- ── JOIN ───────────────────────────────── -->
-  <section id="join" class="section">
+  <section id="join" class="section scroll-section">
     <div class="join-wrap">
       <div class="join-burst" aria-hidden="true"></div>
 
