@@ -548,6 +548,171 @@
       scheduleGlitch();
     })();
 
+    /* ══════════════════════════════════════════════════════════
+       13. VERTICAL CURVED TIMELINE PATH ANIMATION
+       ══════════════════════════════════════════════════════════ */
+    (function () {
+      var timelineSection = document.getElementById('features-timeline-section');
+      var pathOuter = document.getElementById('timelineTrackActiveOuter');
+      var pathInner = document.getElementById('timelineTrackActiveInner');
+      var glowDot = document.getElementById('timelineGlowDot');
+      var gradStopStart = document.getElementById('timelineGradStopStart');
+      var gradStopMid = document.getElementById('timelineGradStopMid');
+      var timelineRows = document.querySelectorAll('.timeline-row');
+
+      if (!timelineSection || !pathInner || !pathOuter || !glowDot) return;
+
+      var pathLength = 0;
+      function getLength() {
+        try {
+          pathLength = pathInner.getTotalLength();
+          pathOuter.style.strokeDasharray = pathLength;
+          pathInner.style.strokeDasharray = pathLength;
+        } catch (e) {}
+      }
+      getLength();
+      window.addEventListener('resize', getLength);
+
+      var targetProgress = 0;
+      var currentProgress = 0;
+      var isLooping = false;
+      var lastSparkTime = 0;
+
+      function spawnSparks(x, y) {
+        var container = document.querySelector('.timeline-svg-container');
+        if (!container) return;
+        for (var i = 0; i < 4; i++) {
+          (function () {
+            var spark = document.createElement('div');
+            var size = 1.5 + Math.random() * 2;
+            var angle = Math.random() * Math.PI * 2;
+            var speed = 15 + Math.random() * 25;
+            spark.style.cssText = [
+              'position:absolute',
+              'left:' + x + 'px',
+              'top:' + y + 'px',
+              'width:' + size + 'px',
+              'height:' + size + 'px',
+              'background:#00FF88',
+              'border-radius:50%',
+              'box-shadow:0 0 5px #00FF88',
+              'pointer-events:none',
+              'z-index:6',
+              'transform:translate(-50%,-50%)',
+              'transition:transform 0.6s cubic-bezier(0.25,1,0.5,1), opacity 0.6s ease'
+            ].join(';');
+            container.appendChild(spark);
+            requestAnimationFrame(function () {
+              spark.style.transform = 'translate(calc(-50% + ' + (Math.cos(angle) * speed) + 'px), calc(-50% + ' + (Math.sin(angle) * speed) + 'px)) scale(0)';
+              spark.style.opacity = '0';
+            });
+            setTimeout(function () { spark.remove(); }, 650);
+          })();
+        }
+      }
+
+      function update() {
+        // Smooth deceleration lerp (cubic-bezier equivalent deceleration fluid feel)
+        currentProgress += (targetProgress - currentProgress) * 0.08;
+        currentProgress = Math.min(1, Math.max(0, currentProgress));
+
+        // Draw active paths
+        var drawLength = pathLength * currentProgress;
+        pathOuter.style.strokeDashoffset = pathLength - drawLength;
+        pathInner.style.strokeDashoffset = pathLength - drawLength;
+
+        // Animate linear gradient trail fade (last 10% fades to transparent)
+        if (gradStopStart && gradStopMid) {
+          var tailStart = Math.max(0, currentProgress - 0.12);
+          gradStopStart.setAttribute('offset', (tailStart * 100) + '%');
+          gradStopMid.setAttribute('offset', (currentProgress * 100) + '%');
+        }
+
+        // Move dot along path coordinates
+        try {
+          var point = pathInner.getPointAtLength(drawLength);
+
+          // Mobile layout adjustments
+          if (window.innerWidth <= 900) {
+            point = { x: 30, y: point.y };
+          }
+
+          var svgElement = pathInner.ownerSVGElement;
+          if (svgElement) {
+            var svgRect = svgElement.getBoundingClientRect();
+            var scaleX = svgRect.width / 200;
+            var scaleY = svgRect.height / 1200;
+
+            var dotX = point.x * scaleX;
+            var dotY = point.y * scaleY;
+
+            glowDot.style.left = dotX + 'px';
+            glowDot.style.top = dotY + 'px';
+
+            // Spark burst every ~2s
+            var now = Date.now();
+            if (now - lastSparkTime > 2000 && currentProgress > 0.01 && currentProgress < 0.99) {
+              spawnSparks(dotX, dotY);
+              lastSparkTime = now;
+            }
+          }
+        } catch (e) {}
+
+        // Keep loop active
+        if (Math.abs(targetProgress - currentProgress) > 0.0005) {
+          requestAnimationFrame(update);
+        } else {
+          isLooping = false;
+        }
+      }
+
+      function onScroll() {
+        var scrollTop = window.scrollY || document.documentElement.scrollTop;
+        var secTop = timelineSection.offsetTop;
+        var secHeight = timelineSection.offsetHeight;
+        var viewportHeight = window.innerHeight;
+
+        // Begin drawing when the top of the timeline section enters the viewport
+        var scrollStart = secTop - viewportHeight * 0.8;
+        var scrollEnd = secTop + secHeight - viewportHeight * 0.3;
+
+        var progress = 0;
+        if (scrollTop >= scrollStart && scrollTop <= scrollEnd) {
+          progress = (scrollTop - scrollStart) / (scrollEnd - scrollStart);
+        } else if (scrollTop > scrollEnd) {
+          progress = 1;
+        }
+        targetProgress = Math.min(1, Math.max(0, progress));
+
+        if (!isLooping) {
+          isLooping = true;
+          requestAnimationFrame(update);
+        }
+
+        // Timeline Node Highlighting & reveal cards
+        timelineRows.forEach(function (row) {
+          var card = row.querySelector('.timeline-card-wrapper');
+          if (!card) return;
+          var rect = card.getBoundingClientRect();
+          var triggerPoint = window.innerHeight * 0.78;
+
+          if (rect.top < triggerPoint) {
+            row.classList.add('node-active');
+            card.classList.add('active');
+          } else {
+            row.classList.remove('node-active');
+            card.classList.remove('active');
+          }
+        });
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      setTimeout(function () {
+        getLength();
+        onScroll();
+      }, 100);
+    })();
+
   }); // end onReady
 
 })();
