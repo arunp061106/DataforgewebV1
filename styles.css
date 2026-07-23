@@ -1325,6 +1325,12 @@ body.gate-active { overflow: hidden; }
   transform: translateY(0);
 }
 
+/* Hero must always be visible — it's above the fold */
+#hero.scroll-section {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .scroll-section .bento-card,
 .scroll-section .act-card {
   opacity: 0;
